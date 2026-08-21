@@ -32,7 +32,10 @@ wifi7_edca/
 │   ├── experiments.py         #   exp_fig2 … exp_fig6 → dict dữ liệu thô (results/*.json)
 │   ├── gnn.py                 #   [mục 9] GNN surrogate + lớp `Surrogate`
 │   ├── train_gnn.py           #   [mục 9] Huấn luyện surrogate
-│   └── ga_surrogate.py        #   [mục 9] Algorithm 1 có GNN sàng lọc
+│   ├── ga_surrogate.py        #   [mục 9] Algorithm 1 có GNN sàng lọc
+│   ├── batch_graph.py         #   [mục 9.8] build_graph vector hoá, chạy theo lô/GPU
+│   ├── policy.py              #   [mục 9.8] GNN policy: kịch bản → tham số EDCA
+│   └── train_policy.py        #   [mục 9.8] Huấn luyện policy + đo lại với GA
 │
 ├── plotting/                  # ===== VẼ KẾT QUẢ =====
 │   ├── style.py               #   Bảng màu đã kiểm chứng CVD, gán màu cố định theo thực thể
@@ -44,7 +47,7 @@ wifi7_edca/
 Luồng dữ liệu một chiều: `datagen → common (utility) → training → plotting`.
 Module `plotting` **không tính lại** bất kỳ đại lượng nào; module `training` **không vẽ**.
 
-Năm file đánh dấu `[mục 9]` là **phần mở rộng ngoài paper** (GNN surrogate). Bỏ hẳn
+Tám file đánh dấu `[mục 9]` là **phần mở rộng ngoài paper** (GNN surrogate + policy). Bỏ hẳn
 chúng đi thì toàn bộ phần tái hiện Fig. 2–6 vẫn chạy nguyên vẹn; chúng không nằm
 trên đường dữ liệu của `main.py`.
 
@@ -75,6 +78,10 @@ Phần mở rộng GNN (mục 9) — cần thêm `torch`, **không** cần `torc
 python -m datagen.dataset --n 200000 --ga-frac 0.45 --out results/gnn_data.npz
 python -m training.train_gnn --data results/gnn_data.npz --epochs 60 --out results/gnn_model.pt
 python -m training.ga_surrogate --model results/gnn_model.pt --links 2
+
+# mục 9.8 -- policy thay hẳn GA
+python -m training.train_policy --surrogate results/gnn_model.pt --steps 3000 --out results/policy.pt
+python -m training.batch_graph   # kiểm chứng bản vector hoá khớp build_graph
 ```
 
 ## 3. Các phương trình đã cài đặt
@@ -504,3 +511,137 @@ tỉ lệ sẽ cao hơn. Ngoại suy: ~84 phút mỗi lần chạy GA gốc → 
 
 **Toàn bộ tập dữ liệu được nạp thẳng lên VRAM** (~450 MB với 200 000 mẫu). Trên 8 GB
 thì tới ~600 000 mẫu vẫn ổn; vượt nữa cần `--device cpu` hoặc nạp theo batch.
+
+### 9.8. GNN policy: bỏ hẳn GA ở thời điểm vận hành
+
+Mục 9.6 vẫn cần chạy GA, chỉ là chạy nhanh hơn 10 lần. Mục này đi xa hơn: một mạng
+nhận **kịch bản** và xuất thẳng **tham số EDCA**, không có vòng lặp tiến hoá nào.
+
+```
+surrogate (9.1–9.6):  (kịch bản + THAM SỐ EDCA) → (c, θ)     — thay hàm đánh giá
+policy    (9.8)    :   kịch bản                 → THAM SỐ EDCA — thay cả GA
+```
+
+Đồ thị đầu vào của policy là **đồ thị đầy đủ** trên các AC, không phải đồ thị theo
+link như mục 9.2: ở đây phép gán link chính là *đầu ra*, nên không thể dùng nó làm ma
+trận kề. Đặc trưng node cố ý đưa vào **hạng tương đối** của ε và D_max giữa các AC —
+quyết định của GA phụ thuộc chủ yếu vào việc AC nào chặt hơn AC nào (xem
+`training/ga.structured_seeds`), không phải giá trị tuyệt đối.
+
+**Huấn luyện bằng cross-entropy method.** Mỗi bước: policy sinh phân phối, lấy K = 96
+cấu hình cho mỗi kịch bản trong lô 32 kịch bản, surrogate chấm cả **3 072 cấu hình
+trong một forward pass**, lấy nhóm tinh hoa 12,5 % làm nhãn, cập nhật bằng
+cross-entropy. Không dùng REINFORCE (phương sai quá lớn với không gian riêng
+17×11×14×257×4×2 mỗi AC) và không dùng Gumbel-softmax (đặc trưng Eq.(8) chứa
+`floor(TXOP/Δ)` — không khả vi; trộn mềm các mức CW còn đẩy đặc trưng ra ngoài miền
+surrogate từng thấy). Cross-entropy method chỉ cần **thứ tự** của fitness, đúng thứ mà
+surrogate làm tốt nhất (ρ = 0.9996), và nó chính là phiên bản khấu hao của GA mà nó
+thay thế.
+
+Chi phí là điều làm PA2 chỉ tồn tại được nhờ mục 9: mỗi bước chấm 3 072 cấu hình. Với
+mô hình giải tích đó là 16 ms × 3 072 = **49 giây mỗi bước**; với surrogate là ~15 ms.
+
+#### Hai bẫy phải xử lý — cả hai đều là tính chất của mô hình, không phải của mạng
+
+**Bẫy 1 — góc suy biến của mô hình paper.** Khi CW rất nhỏ thì c → 1, hầu như không
+gói nào thành công, nên trễ *có điều kiện* của số ít gói sống sót lại rất ngắn và ràng
+buộc `Pr(D ≥ D_max) < ε` được thoả mãn **một cách hình thức**. Cấu hình đó được chấm
+"khả thi" với fitness = 0 (vì `P_loss ≈ 1`). Đây cùng loại hiện tượng với ghi chú
+`D(1⁻) = 0.58` ở mục 3.
+
+Hàm `common.utility.fitness` chuyển bậc giữa vùng khả thi (≥ 0) và vi phạm (≤ 0) —
+đúng cho **báo cáo**, nhưng khiến cấu hình vô dụng đó xếp **trên** mọi cấu hình đang
+tiến gần khả thi, nên cross-entropy method sụp đổ vào nó ngay lập tức (đo được: policy
+hội tụ về `CW = 4` cho mọi AC, fitness 0). GA không gặp vấn đề này vì
+`structured_seeds` gieo sẵn quần thể vào vùng tốt.
+
+Xử lý: dùng điểm **có định hướng** khi huấn luyện, `mục tiêu − λ·Σ excess`, để một cấu
+hình có mục tiêu 45 và vượt 1 bậc vẫn hơn hẳn 0. Báo cáo vẫn dùng fitness gốc.
+
+**Bẫy 2 — điểm tối ưu của chính hàm định hướng nằm ở vùng vi phạm nhẹ.** Với λ = 2 cố
+định, lần chạy đầu cho policy đạt **mục tiêu 49.731 — cao hơn cả GA gốc (49.704)** —
+nhưng AC3 vượt ngưỡng 0.048 bậc, tức phạt chỉ 0.096 điểm trong khi đẩy CW tới đó lời
+hơn thế. Hàm định hướng *khuyến khích* vi phạm nhẹ.
+
+Nhưng còn một tầng sâu hơn: sai số của surrogate trên θ là **0.39** (hệ số 2.47, mục
+9.5) trong khi biên độ cần phân giải ở AC3 chỉ là **0.048 bậc**. Policy đang được yêu
+cầu hạ cánh đúng phía của một đường biên mà bộ đánh giá của nó không nhìn thấy nổi.
+Và AC3 đúng là ràng buộc mà mục 6.4 đã ghi nhận là "nằm sát biên" — nơi mô hình giải
+tích cho 6.9e-5 còn mô phỏng cho 1.1e-4. Không phải trùng hợp: đó là ràng buộc chặt
+nhất của bài toán.
+
+Xử lý, hai phần:
+
+| | |
+|---|---|
+| λ **tăng dần** 2 → 20 theo lịch | giai đoạn đầu phạt nhẹ để thoát bẫy 1, giai đoạn sau phạt nặng để ràng buộc trở thành thật sự ràng buộc |
+| **biên an toàn** 0.45 bậc | ép policy nhắm vào *trong* biên một khoảng bằng đúng độ bất định của surrogate, để nghiệm vẫn khả thi dù surrogate lệch một bậc chuẩn |
+
+Đây là một nguyên tắc đáng ghi nhận chung: **một policy học từ surrogate không thể
+nhắm sát ràng buộc hơn độ chính xác của chính surrogate đó.** Biên an toàn không phải
+mẹo kỹ thuật mà là hệ quả trực tiếp của mục 9.5.
+
+#### Kết quả
+
+3 000 bước, **219 giây** trên RTX 4060; 277 363 tham số; kho 2 000 kịch bản (50 % là
+kịch bản Sec. V, 50 % ngẫu nhiên 3–6 AC).
+
+| Phương pháp | Thời gian | Fitness | Khả thi |
+|---|---|---|---|
+| **Policy (greedy, 1 mẫu)** | **13.8 ms** | **47.760** | **True** |
+| Policy (512 mẫu, surrogate xếp hạng) | 23.1 ms | 47.760 | True |
+| GA + GNN surrogate (mục 9.6) | 15.7 s | 49.370 | True |
+| GA gốc (mục 9.6) | 157.0 s | 49.704 | True |
+
+Mọi giá trị fitness đều do **mô hình giải tích** tính, không phải surrogate dự đoán.
+
+Policy đạt **96.1 %** fitness của GA gốc trong **1/11 400** thời gian. Khoảng cách
+1.94 điểm chính là **giá của biên an toàn**, thấy rõ ở nghiệm: AC3 nằm ở 4.4e-6 so với
+ε₃ = 1e-4 — sâu trong vùng khả thi gấp 23 lần, thay vì sát mép như nghiệm của GA
+(6.9e-5). Đây là đánh đổi có chủ ý, không phải thiếu sót.
+
+Nghiệm policy tìm được (mọi ràng buộc đạt, mục tiêu Eq.(18) = 47.760):
+
+| AC | link | CW_min | CW_max | AIFSN | TXOP (µs) | R | Pr(D ≥ D_max) | ε |
+|---|---|---|---|---|---|---|---|---|
+| AC1 | 0 | 181 | 181 | 2 | 0 | 7 | 5.10e-9 | 1e-7 |
+| AC2 | 1 | 181 | 181 | 2 | 0 | 7 | 3.59e-7 | 1e-6 |
+| AC3 | 0 | 512 | 512 | 2 | 0 | 7 | 4.40e-6 | 1e-4 |
+| AC4 | 1 | 1023 | 1023 | 9 | 0 | 7 | 1.26e-4 | 1e-2 |
+| AC5 | 1 | 1023 | 1023 | 15 | 0 | 7 | 1.47e-3 | 5e-1 |
+
+**Kiểm chứng chéo:** `CW_min = 181` cho AC1 xuất hiện ở cả ba nghiệm — mục 6.2 (GA
+gốc), mục 9.6 (GA + surrogate) và ở đây (policy, không có GA) — qua ba đường tìm kiếm
+hoàn toàn khác nhau. `CW_max = CW_min` và `R = 7` cũng lặp lại ở cả ba, đúng quy luật
+đã phân tích ở mục 6.2.
+
+#### Đọc kết quả này cho đúng
+
+Policy **không** tốt hơn GA về chất lượng nghiệm và không nhằm mục đích đó. Ý nghĩa của
+nó nằm ở chỗ khác:
+
+- **Thời gian thực.** GA 157 giây không thể chạy trong một AP; 13.8 ms thì có. Đây là
+  điều mà phương pháp của paper — hoàn toàn offline — không làm được.
+- **Khấu hao.** Fig. 6 cần 10 lần chạy GA độc lập để quét một tham số. Với policy đó là
+  10 lần forward pass.
+- **Tổng quát hoá.** Cùng một mạng dùng cho 3–6 AC không cần huấn luyện lại, nhờ tính
+  bất biến hoán vị của GNN (mục 9.1).
+
+Cách dùng thực tế mạnh nhất là **policy làm điểm khởi tạo cho GA**: policy đưa quần thể
+vào ngay vùng khả thi trong vài mili-giây — thay cho `structured_seeds` thủ công — rồi
+GA tinh chỉnh. Chưa đo, nhưng là bước tiếp theo tự nhiên.
+
+#### Hạn chế
+
+**Policy được huấn luyện với số link cố định** (`--links 2`) vì head chọn link có kích
+thước phụ thuộc số link. Đổi sang M = 3 cần huấn luyện lại; kiến trúc hỗ trợ tới
+`MAX_LINKS = 4`.
+
+**Chế độ lấy 512 mẫu không hơn greedy.** Sau khi entropy giảm dần, policy trở nên gần
+như tất định nên lấy thêm mẫu không thêm giá trị. Muốn tận dụng chế độ lấy mẫu thì phải
+giữ entropy cao hơn ở cuối quá trình — đánh đổi với chất lượng nghiệm greedy.
+
+**Toàn bộ sai lệch của mục 9.7 vẫn còn nguyên** và còn cộng thêm một tầng: policy học từ
+surrogate, mà surrogate học từ mô hình giải tích. Nghiệm cuối luôn được `evaluate_config`
+kiểm chứng nên con số báo cáo vẫn đúng, nhưng mọi sai lệch của mô hình giải tích so với
+thực tế đều được kế thừa qua hai tầng.
