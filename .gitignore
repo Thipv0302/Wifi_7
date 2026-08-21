@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+
+# Tap du lieu huan luyen GNN -- sinh lai bang:
+#   python -m datagen.dataset --n 200000 --ga-frac 0.45 --out results/gnn_data.npz
+*.npz
+
+# San pham smoke test
+*_smoke.*
+
+*.zip
