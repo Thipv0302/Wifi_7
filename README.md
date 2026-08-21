@@ -35,7 +35,8 @@ wifi7_edca/
 │   ├── ga_surrogate.py        #   [mục 9] Algorithm 1 có GNN sàng lọc
 │   ├── batch_graph.py         #   [mục 9.8] build_graph vector hoá, chạy theo lô/GPU
 │   ├── policy.py              #   [mục 9.8] GNN policy: kịch bản → tham số EDCA
-│   └── train_policy.py        #   [mục 9.8] Huấn luyện policy + đo lại với GA
+│   ├── train_policy.py        #   [mục 9.8] Huấn luyện policy + đo lại với GA
+│   └── compare_seeding.py     #   [mục 9.9] Policy gieo quần thể ban đầu cho GA
 │
 ├── plotting/                  # ===== VẼ KẾT QUẢ =====
 │   ├── style.py               #   Bảng màu đã kiểm chứng CVD, gán màu cố định theo thực thể
@@ -47,7 +48,7 @@ wifi7_edca/
 Luồng dữ liệu một chiều: `datagen → common (utility) → training → plotting`.
 Module `plotting` **không tính lại** bất kỳ đại lượng nào; module `training` **không vẽ**.
 
-Tám file đánh dấu `[mục 9]` là **phần mở rộng ngoài paper** (GNN surrogate + policy). Bỏ hẳn
+Chín file đánh dấu `[mục 9]` là **phần mở rộng ngoài paper** (GNN surrogate + policy). Bỏ hẳn
 chúng đi thì toàn bộ phần tái hiện Fig. 2–6 vẫn chạy nguyên vẹn; chúng không nằm
 trên đường dữ liệu của `main.py`.
 
@@ -82,6 +83,9 @@ python -m training.ga_surrogate --model results/gnn_model.pt --links 2
 # mục 9.8 -- policy thay hẳn GA
 python -m training.train_policy --surrogate results/gnn_model.pt --steps 3000 --out results/policy.pt
 python -m training.batch_graph   # kiểm chứng bản vector hoá khớp build_graph
+
+# mục 9.9 -- policy gieo quần thể cho GA (cấu hình cho chất lượng cao nhất)
+python -m training.compare_seeding --model results/gnn_model.pt --policy results/policy.pt
 ```
 
 ## 3. Các phương trình đã cài đặt
@@ -645,3 +649,98 @@ giữ entropy cao hơn ở cuối quá trình — đánh đổi với chất lư
 surrogate, mà surrogate học từ mô hình giải tích. Nghiệm cuối luôn được `evaluate_config`
 kiểm chứng nên con số báo cáo vẫn đúng, nhưng mọi sai lệch của mô hình giải tích so với
 thực tế đều được kế thừa qua hai tầng.
+
+### 9.9. Policy làm điểm khởi tạo cho GA — kết hợp tốt nhất của cả hai
+
+Mục 9.6 tăng tốc GA 10× nhưng mất 0.334 điểm; mục 9.8 nhanh hơn 11 400× nhưng mất 1.94
+điểm vì biên an toàn. Mục này gộp cả hai và **không mất gì**.
+
+Ý tưởng xuất phát từ một quan sát về chính `training/ga.structured_seeds`: đó là một bộ
+**quy tắc thủ công** do người viết ra sau khi quét tham số — *"CW_min lớn, CW_max ≈
+CW_min, R = 7, AC nền đẩy sang AIFSN lớn"*. Policy của mục 9.8 đã học đúng những quy
+luật đó từ dữ liệu, và còn **điều chỉnh được theo từng kịch bản cụ thể** — điều mà một
+bộ quy tắc tĩnh không làm được. Vậy thì dùng policy để gieo quần thể ban đầu.
+
+Cài đặt: `training/compare_seeding.policy_seeds` sinh 80 genome (1 cá thể greedy + 79
+mẫu ở nhiệt độ 1.6 để có đa dạng — sau khi entropy giảm dần, policy gần như tất định,
+mà một quần thể gồm 80 bản sao giống hệt nhau thì không còn là quần thể), xếp hạng bằng
+surrogate, tốt nhất đứng đầu. `run_ga_surrogate(..., seed_genomes=...)` dùng chúng thay
+cho `structured_seeds`.
+
+Chi phí gieo: **8.4 ms** (trung vị trên 20 lần, RTX 4060) — không đáng kể so với phần GA.
+
+#### Kết quả
+
+Cùng seed = 2025, cùng ngân sách GA (N_pop = 200, N_gen = 300, N_stag = 50), kịch bản
+Sec. V, 2 link:
+
+| Phương pháp | Thời gian | Fitness | Khả thi | Đánh giá giải tích | Thế hệ dừng | Khả thi ở quần thể đầu |
+|---|---|---|---|---|---|---|
+| GA gốc | 161.7 s | 49.704 | True | 31 244 | 177 | **0 %** |
+| GA + GNN (structured_seeds) | 14.8 s | 49.370 | True | 1 667 | 191 | **0 %** |
+| **GA + GNN + gieo bằng policy** | **5.2 s** | **49.704** | True | **593** | **60** | **33 %** |
+| Policy đơn thuần (mục 9.8) | 0.0138 s | 47.760 | True | 1 | — | — |
+
+Mọi giá trị fitness đều do **mô hình giải tích** tính.
+
+Ba con số đáng chú ý:
+
+- **Fitness 49.704 — bằng đúng GA gốc**, lấy lại trọn vẹn 0.334 điểm mà bản chỉ dùng
+  surrogate đánh mất, và 1.94 điểm mà policy đơn thuần đánh mất.
+- **31× nhanh hơn GA gốc** (161.7 s → 5.2 s) và **53× ít lần gọi mô hình giải tích hơn**
+  (31 244 → 593).
+- **Cột cuối là cột giải thích tất cả:** 33 % quần thể ban đầu đã khả thi, so với 0 % ở
+  cả hai cách gieo còn lại. GA không còn phải tiêu phần lớn ngân sách để *tìm đường vào*
+  vùng khả thi — nó bắt đầu ở trong đó. Hệ quả trực tiếp: dừng sau **60 thế hệ** thay vì
+  177/191.
+
+Nhắc lại mục 9.3: lấy mẫu ngẫu nhiên cho **0/300** cấu hình khả thi, và ngay cả nhiễu
+quanh chính nghiệm tối ưu cũng chỉ cho 1.5 %. Việc policy sinh được một quần thể 33 %
+khả thi **trong 8.4 ms** là thước đo trực tiếp cho thấy nó đã học được cấu trúc của bài
+toán, chứ không phải ghi nhớ một nghiệm.
+
+Nghiệm tìm được (mục tiêu Eq.(18) = 49.704, mọi ràng buộc đạt):
+
+| AC | link | CW_min | CW_max | AIFSN | TXOP (µs) | R | Pr(D ≥ D_max) | ε |
+|---|---|---|---|---|---|---|---|---|
+| AC1 | 0 | 181 | 181 | 2 | 0 | 7 | 6.35e-8 | 1e-7 |
+| AC2 | 1 | 256 | 256 | 2 | 32 | 7 | 4.31e-7 | 1e-6 |
+| AC3 | 0 | 512 | 512 | 2 | 32 | 7 | 2.10e-5 | 1e-4 |
+| AC4 | 0 | 1023 | 1023 | 12 | 1600 | 7 | 7.24e-6 | 1e-2 |
+| AC5 | 1 | 1023 | 1023 | 15 | 32 | 7 | 4.51e-6 | 5e-1 |
+
+**Cả năm giá trị CW_min — 181, 256, 512, 1023, 1023 — trùng khít với nghiệm ở mục 6.2**,
+tìm được bằng một đường hoàn toàn khác (GA gốc, không có mạng nơ-ron nào). AIFSN, TXOP
+và phép gán link thì khác, đúng như phân tích ở mục 9.6: một khi P_loss chạm sàn thì hàm
+mục tiêu phẳng và tồn tại cả một lớp nghiệm tương đương, nhưng **cấu trúc cửa sổ tranh
+chấp thì xác định duy nhất**.
+
+Riêng AC3 ở đây nằm ở 2.10e-5 so với ε₃ = 1e-4 — sâu trong vùng khả thi gấp 5 lần, trong
+khi nghiệm của GA gốc ở mục 6.2 nằm sát mép tại 6.9e-5 (mà mục 6.4 đã cảnh báo là mô
+phỏng cho 1.1e-4, tức vượt nhẹ). Nói cách khác, nghiệm ở đây **vừa đạt fitness bằng GA
+gốc vừa vững hơn trước sai số mô hình** — ảnh hưởng còn sót lại của biên an toàn ở mục
+9.8, lần này không phải trả giá gì.
+
+#### Đây mới là cấu hình nên dùng
+
+Ba mục 9.6, 9.8, 9.9 không phải ba phương án thay thế nhau mà là ba lớp chồng lên nhau:
+
+| Cần gì | Dùng gì | Chi phí |
+|---|---|---|
+| Suy luận thời gian thực trong AP | Policy đơn thuần (9.8) | 13.8 ms · 96.1 % fitness |
+| Chất lượng tối đa, ngân sách vài giây | Policy gieo + GA + surrogate (9.9) | 5.2 s · 100 % fitness |
+| Chỉ có mô hình giải tích, không có GPU | GA gốc | 161.7 s · 100 % fitness |
+
+Với việc quét tham số như Fig. 6 — 10 lần chạy GA độc lập — cấu hình 9.9 rút tổng thời
+gian từ khoảng 27 phút xuống dưới **1 phút**, mà không đổi lấy bất kỳ mất mát chất lượng
+nào.
+
+#### Hạn chế
+
+**Chưa đo trên kịch bản ngoài kho huấn luyện.** Policy được huấn luyện với 50 % kịch bản
+Sec. V nên nó thấy kịch bản này rất nhiều lần. Phép đo trung thực hơn cần một kịch bản
+hoàn toàn mới, không có trong kho — và đó cũng là phép đo cho biết policy học *cấu trúc*
+hay chỉ học *nghiệm*. Con số 33 % khả thi ở quần thể đầu là bằng chứng gián tiếp ủng hộ
+vế thứ nhất, nhưng chưa phải bằng chứng trực tiếp.
+
+**Toàn bộ hạn chế của mục 9.7 và 9.8 vẫn còn nguyên**, kể cả việc policy cố định số link.

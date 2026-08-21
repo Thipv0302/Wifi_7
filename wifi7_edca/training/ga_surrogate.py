@@ -75,8 +75,16 @@ def polish_screened(genome: np.ndarray, spec: GenomeSpec, upper: np.ndarray,
 def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
                      n_links: int = 1, ga: GAParams = GA,
                      seed: Optional[int] = None, verify_top: int = 8,
-                     polish: bool = True, verbose: bool = False) -> GAResult:
-    """Algorithm 1 voi ham thich nghi duoc GNN sang loc truoc."""
+                     polish: bool = True, verbose: bool = False,
+                     seed_genomes: Optional[Sequence[np.ndarray]] = None
+                     ) -> GAResult:
+    """Algorithm 1 voi ham thich nghi duoc GNN sang loc truoc.
+
+    `seed_genomes` -- neu duoc cung cap, cac genome nay THAY THE
+    `training.ga.structured_seeds` khi gieo quan the ban dau. Dung de gieo bang
+    GNN policy (muc 9.9): policy sinh mot loat cau hinh trong vai mili-giay,
+    thay cho bo quy tac thu cong `structured_seeds`.
+    """
     rng = np.random.default_rng(ga.seed if seed is None else seed)
     spec = GenomeSpec(n_ac=len(ac_set), n_links=n_links,
                       allow_link_choice=n_links > 1)
@@ -127,13 +135,17 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
 
     # --- khoi tao quan the (giong het training/ga.run_ga) -------------------
     pop = [random_genome(spec, rng) for _ in range(ga.n_pop)]
-    seeds = structured_seeds(ac_set, n_links)
     n_seed = max(ga.n_pop // 3, 1)
-    if len(seeds) > n_seed:
-        pick = np.linspace(0, len(seeds) - 1, n_seed).astype(int)
-        seeds = [seeds[i] for i in pick]
-    for j, ind in enumerate(seeds[:n_seed]):
-        pop[j] = encode(ind, spec)
+    if seed_genomes is not None:
+        for j, g in enumerate(list(seed_genomes)[:n_seed]):
+            pop[j] = np.asarray(g, dtype=int)
+    else:
+        seeds = structured_seeds(ac_set, n_links)
+        if len(seeds) > n_seed:
+            pick = np.linspace(0, len(seeds) - 1, n_seed).astype(int)
+            seeds = [seeds[i] for i in pick]
+        for j, ind in enumerate(seeds[:n_seed]):
+            pop[j] = encode(ind, spec)
 
     fit = eval_population(pop)
     best_idx = int(np.argmax(fit))
