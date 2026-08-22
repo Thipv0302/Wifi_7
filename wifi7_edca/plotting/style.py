@@ -134,6 +134,20 @@ def paper_style() -> None:
     })
 
 
+# ---------------------------------------------------------------------------
+# He mau cho cac hinh DO DOI CHIEU (benchmark GA vs GNN)
+# ---------------------------------------------------------------------------
+# Bang Okabe-Ito: an toan voi moi dang mu mau va con phan biet duoc khi in den
+# trang -- dieu kien bat buoc cho hinh dua vao paper. Moi phuong phap duoc gan
+# CO DINH mot bo (mau, net, marker) de doi chieu duoc giua cac hinh.
+
+BENCH = {
+    "ga":            {"c": "#000000", "ls": "-",  "m": "o"},
+    "ga_gnn":        {"c": "#0072B2", "ls": "--", "m": "s"},
+    "ga_gnn_policy": {"c": "#D55E00", "ls": "-",  "m": "^"},
+    "policy":        {"c": "#009E73", "ls": ":",  "m": "*"},
+}
+
 # Hau to them vao ten file hinh (main.py dat "_quick" khi chay che do nhanh de
 # khong de len hinh cua lan chay day du).
 NAME_SUFFIX = ""

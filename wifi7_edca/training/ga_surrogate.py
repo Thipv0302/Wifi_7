@@ -93,6 +93,7 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
     exact: Dict[bytes, Tuple[float, bool]] = {}     # genome -> (fitness, kha thi)
     hist = GAHistory()
     n_sur = 0
+    t_start = time.perf_counter()
 
     def eval_exact(g: np.ndarray) -> float:
         """Danh gia CHINH XAC bang mo hinh giai tich (co nho dem)."""
@@ -132,6 +133,8 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
         hist.frac_feasible.append(float(np.mean(fit_ >= 0.0)))
         ok = fit_ >= 0.0
         hist.mean_feasible.append(float(np.mean(fit_[ok])) if ok.any() else np.nan)
+        hist.wall.append(time.perf_counter() - t_start)
+        hist.evals.append(hist.n_eval)
 
     # --- khoi tao quan the (giong het training/ga.run_ga) -------------------
     pop = [random_genome(spec, rng) for _ in range(ga.n_pop)]
@@ -197,7 +200,9 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
                                          eval_exact)
         for lst, val in ((hist.best, best_f), (hist.mean, hist.mean[-1]),
                          (hist.frac_feasible, hist.frac_feasible[-1]),
-                         (hist.mean_feasible, hist.mean_feasible[-1])):
+                         (hist.mean_feasible, hist.mean_feasible[-1]),
+                         (hist.wall, time.perf_counter() - t_start),
+                         (hist.evals, hist.n_eval)):
             lst.append(val)
 
     best_params = decode(best_g, spec)

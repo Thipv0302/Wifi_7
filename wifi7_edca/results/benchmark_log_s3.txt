@@ -1,0 +1,23 @@
+﻿thiet bi: cuda  ·  2 link  ·  N_pop [25, 50, 100, 200]  ·  3 seed  ·  N_gen = 300, N_stag = 50
+
+=== [A] duong anytime (N_pop = 200, seed = 2025) ===
+    GA (analytical model only)           155.2 s  fitness  49.704  giai tich  31244
+    GA + GNN surrogate                    17.3 s  fitness  49.370  giai tich   1667
+    GA + GNN + policy seeding              6.3 s  fitness  49.704  giai tich    593
+    Policy only (no GA)                   4.1 ms  fitness  47.760  giai tich      1
+
+=== [B] quet ngan sach ===
+    GA (analytical model only)         N_pop   25     20.0 s  fitness  33.119 [27.282, 47.409]  giai tich    4195
+    GA (analytical model only)         N_pop   50     67.7 s  fitness  39.909 [29.490, 47.762]  giai tich   12697
+    GA (analytical model only)         N_pop  100     52.9 s  fitness  24.021 [21.204, 49.704]  giai tich    9976
+    GA (analytical model only)         N_pop  200    154.9 s  fitness  33.162 [32.568, 49.704]  giai tich   31244
+    GA + GNN surrogate                 N_pop   25     10.4 s  fitness  33.657 [27.282, 47.409]  giai tich    1600
+    GA + GNN surrogate                 N_pop   50     15.0 s  fitness  30.138 [27.043, 41.484]  giai tich    1943
+    GA + GNN surrogate                 N_pop  100     18.3 s  fitness  49.704 [49.370, 49.704]  giai tich    2088
+    GA + GNN surrogate                 N_pop  200     19.2 s  fitness  49.370 [47.840, 49.704]  giai tich    1667
+    GA + GNN + policy seeding          N_pop   25      3.3 s  fitness  49.704 [49.704, 49.704]  giai tich     628
+    GA + GNN + policy seeding          N_pop   50      3.8 s  fitness  49.704 [49.704, 49.704]  giai tich     660
+    GA + GNN + policy seeding          N_pop  100      5.2 s  fitness  49.695 [49.695, 49.704]  giai tich     672
+    GA + GNN + policy seeding          N_pop  200      6.4 s  fitness  49.704 [49.695, 49.704]  giai tich     603
+
+Da luu -> results\benchmark.json

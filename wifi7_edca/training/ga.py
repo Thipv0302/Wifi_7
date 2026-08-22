@@ -23,6 +23,7 @@ nen GA luon uu tien vung kha thi ma khong can toan tu sua chua rieng.
 """
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -41,6 +42,8 @@ class GAHistory:
     mean: List[float] = field(default_factory=list)          # trung binh toan quan the
     mean_feasible: List[float] = field(default_factory=list)  # trung binh ca the kha thi
     frac_feasible: List[float] = field(default_factory=list)
+    wall: List[float] = field(default_factory=list)     # giay tu luc bat dau chay
+    evals: List[int] = field(default_factory=list)      # so lan goi mo hinh giai tich
     n_eval: int = 0
     stopped_at: int = 0
 
@@ -48,6 +51,7 @@ class GAHistory:
         return {"best": self.best, "mean": self.mean,
                 "mean_feasible": self.mean_feasible,
                 "frac_feasible": self.frac_feasible,
+                "wall": self.wall, "evals": self.evals,
                 "n_eval": self.n_eval, "stopped_at": self.stopped_at}
 
 
@@ -208,6 +212,7 @@ def run_ga(ac_set: Sequence[ACConfig], n_links: int = 1,
 
     cache: Dict[bytes, Tuple[float, bool]] = {}
     hist = GAHistory()
+    t_start = time.perf_counter()
 
     def evaluate(g: np.ndarray) -> float:
         key = g.tobytes()
@@ -228,6 +233,8 @@ def run_ga(ac_set: Sequence[ACConfig], n_links: int = 1,
         hist.mean.append(float(np.mean(fit_)))
         hist.frac_feasible.append(float(ok.mean()))
         hist.mean_feasible.append(float(np.mean(fit_[ok])) if ok.any() else np.nan)
+        hist.wall.append(time.perf_counter() - t_start)
+        hist.evals.append(hist.n_eval)
 
     # --- khoi tao quan the -------------------------------------------------
     pop = [random_genome(spec, rng) for _ in range(ga.n_pop)]
@@ -294,6 +301,8 @@ def run_ga(ac_set: Sequence[ACConfig], n_links: int = 1,
                                   if hist.frac_feasible else 1.0)
         hist.mean_feasible.append(hist.mean_feasible[-1]
                                   if hist.mean_feasible else best_f)
+        hist.wall.append(time.perf_counter() - t_start)
+        hist.evals.append(hist.n_eval)
 
     best_params = decode(best_g, spec)
     qos = evaluate_config(best_params, ac_set)

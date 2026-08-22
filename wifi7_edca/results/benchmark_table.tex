@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Cost and reliability of reaching the optimised MLO EDCA configuration (Sec.~V scenario, $M=2$ links, $N_{pop}=200$, $N_{gen}=300$, $N_{stag}=50$, 10 independent seeds). \emph{Success} counts runs whose final fitness is within $1\%$ of the best value observed across all methods ($\geq 49.21$); fitness is the median over seeds. All fitness values are computed by the analytical model of Eqs.~(1)--(18), never by the surrogate.}
+\label{tab:gnn_speedup}
+\begin{tabular}{lrrrrr}
+\toprule
+Method & Time (s) & Exact evals & Fitness & Success & Speed-up \\
+\midrule
+GA (analytical model only) & 152.6 & 29309 & 35.042 & 1/10 & --- \\
+GA + GNN surrogate & 32.2 & 1483 & 34.625 & 2/10 & $4.7\times$ \\
+GA + GNN + policy seeding & 13.6 & 607 & 49.695 & 10/10 & $11.3\times$ \\
+Policy only (no GA) & 0.0083 & 1 & 47.760 & --- & $18276\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}

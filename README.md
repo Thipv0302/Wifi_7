@@ -36,11 +36,13 @@ wifi7_edca/
 │   ├── batch_graph.py         #   [mục 9.8] build_graph vector hoá, chạy theo lô/GPU
 │   ├── policy.py              #   [mục 9.8] GNN policy: kịch bản → tham số EDCA
 │   ├── train_policy.py        #   [mục 9.8] Huấn luyện policy + đo lại với GA
-│   └── compare_seeding.py     #   [mục 9.9] Policy gieo quần thể ban đầu cho GA
+│   ├── compare_seeding.py     #   [mục 9.9] Policy gieo quần thể ban đầu cho GA
+│   └── benchmark.py           #   [mục 9.10] Đo lặp nhiều seed × nhiều N_pop
 │
 ├── plotting/                  # ===== VẼ KẾT QUẢ =====
 │   ├── style.py               #   Bảng màu đã kiểm chứng CVD, gán màu cố định theo thực thể
-│   └── figures.py             #   plot_fig2 … plot_fig6 → figures/*.png
+│   ├── figures.py             #   plot_fig2 … plot_fig6 → figures/*.png
+│   └── bench_figures.py       #   [mục 9.10] Fig. 7-9 đối chiếu GA vs GNN
 │
 └── main.py                    # pipeline: gen data → utility → training → vẽ
 ```
@@ -86,7 +88,16 @@ python -m training.batch_graph   # kiểm chứng bản vector hoá khớp build
 
 # mục 9.9 -- policy gieo quần thể cho GA (cấu hình cho chất lượng cao nhất)
 python -m training.compare_seeding --model results/gnn_model.pt --policy results/policy.pt
+
+# mục 9.10 -- đo lặp nhiều seed (~95 phút) rồi vẽ Fig. 7-9
+python -m training.benchmark --model results/gnn_model.pt --policy results/policy.pt \
+       --links 2 --pops 6 10 16 25 50 100 200 --seeds 10 --out benchmark.json
+python -m plotting.bench_figures --data results/benchmark.json
 ```
+
+Mục 9 có **mười một** file đánh dấu `[mục 9]`; hai file mới nhất (`benchmark.py`,
+`bench_figures.py`) là phép đo lặp nhiều seed, và mục 9.10 sửa lại một số kết luận của
+các mục 9.6 và 9.9 vốn dựa trên một lần chạy duy nhất.
 
 ## 3. Các phương trình đã cài đặt
 
@@ -478,6 +489,13 @@ Kịch bản Sec. V, 2 link, N_pop = 200, N_gen = 300, N_stag = 50, seed = 2025:
 so với 31 244, chạy 191 thế hệ so với 177. Không có đánh đổi "nhanh hơn nhờ tìm ít
 hơn".
 
+> ⚠️ **Bảng trên là kết quả của MỘT seed (2025) và không đại diện.** Phép đo lặp
+> trên 10 seed (mục 9.10) cho thấy seed 2025 tình cờ có lợi cho surrogate: tăng tốc
+> thực tế ở `N_pop = 200` là **4.7×** chứ không phải 10.03×, và ở `N_pop ≤ 25` thì
+> GA + GNN **chậm hơn** GA gốc. Về chất lượng nghiệm, GA + GNN **không hơn** GA gốc
+> một cách có ý nghĩa (2/10 lần thành công so với 1/10). Đọc mục 9.10 trước khi
+> trích dẫn bất kỳ con số nào ở đây.
+
 Nghiệm tìm được (mọi ràng buộc đạt, mục tiêu Eq.(18) = 49.370):
 
 | AC | link | CW_min | CW_max | AIFSN | TXOP (µs) | R | Pr(D ≥ D_max) | ε | P_loss |
@@ -694,6 +712,12 @@ Ba con số đáng chú ý:
   vùng khả thi — nó bắt đầu ở trong đó. Hệ quả trực tiếp: dừng sau **60 thế hệ** thay vì
   177/191.
 
+> ⚠️ **Bảng trên cũng là một seed duy nhất.** Trên 10 seed (mục 9.10) tỉ lệ tăng tốc ở
+> `N_pop = 200` là **11.3×** chứ không phải 31×. Nhưng kết luận định tính thì *mạnh hơn*
+> chứ không yếu đi: gieo bằng policy đạt **69/70** lần chạy thành công so với **4/70**
+> của GA gốc. Điểm mấu chốt của mục này không phải tốc độ mà là **độ tin cậy** — xem
+> mục 9.10.
+
 Nhắc lại mục 9.3: lấy mẫu ngẫu nhiên cho **0/300** cấu hình khả thi, và ngay cả nhiễu
 quanh chính nghiệm tối ưu cũng chỉ cho 1.5 %. Việc policy sinh được một quần thể 33 %
 khả thi **trong 8.4 ms** là thước đo trực tiếp cho thấy nó đã học được cấu trúc của bài
@@ -725,11 +749,15 @@ gốc vừa vững hơn trước sai số mô hình** — ảnh hưởng còn s�
 
 Ba mục 9.6, 9.8, 9.9 không phải ba phương án thay thế nhau mà là ba lớp chồng lên nhau:
 
-| Cần gì | Dùng gì | Chi phí |
+| Cần gì | Dùng gì | Chi phí (trung vị 10 seed, `N_pop` = 200) |
 |---|---|---|
-| Suy luận thời gian thực trong AP | Policy đơn thuần (9.8) | 13.8 ms · 96.1 % fitness |
-| Chất lượng tối đa, ngân sách vài giây | Policy gieo + GA + surrogate (9.9) | 5.2 s · 100 % fitness |
-| Chỉ có mô hình giải tích, không có GPU | GA gốc | 161.7 s · 100 % fitness |
+| Suy luận thời gian thực trong AP | Policy đơn thuần (9.8) | 8 ms · fitness 47.76 |
+| Chất lượng tối đa, ngân sách vài giây | Policy gieo + GA + surrogate (9.9) | 13.6 s · fitness 49.70 · **69/70 lần đạt** |
+| Chỉ có mô hình giải tích, không có GPU | GA gốc | 152.6 s · fitness 35.04 · **4/70 lần đạt** |
+
+Hàng cuối là hàng cần đọc kỹ: GA gốc **không** phải "chậm nhưng chắc". Trên 10 seed nó
+chỉ tìm ra nghiệm tối ưu 4 lần trong 70, và trung vị fitness của nó (35.04) là trung vị
+của một phân phối hai đỉnh chứ không phải "nghiệm mà GA tìm được".
 
 Với việc quét tham số như Fig. 6 — 10 lần chạy GA độc lập — cấu hình 9.9 rút tổng thời
 gian từ khoảng 27 phút xuống dưới **1 phút**, mà không đổi lấy bất kỳ mất mát chất lượng
@@ -744,3 +772,88 @@ hay chỉ học *nghiệm*. Con số 33 % khả thi ở quần thể đầu là 
 vế thứ nhất, nhưng chưa phải bằng chứng trực tiếp.
 
 **Toàn bộ hạn chế của mục 9.7 và 9.8 vẫn còn nguyên**, kể cả việc policy cố định số link.
+
+### 9.10. Đo lặp nhiều seed — và điều nó sửa lại ở các mục trên
+
+Mọi con số ở các mục 9.6, 9.8, 9.9 đều lấy từ **một lần chạy với seed = 2025**. GA là
+thuật toán ngẫu nhiên; một lần chạy không nói lên điều gì. Mục này chạy lại toàn bộ
+phép so sánh trên lưới `N_pop ∈ {6, 10, 16, 25, 50, 100, 200}` × **10 seed độc lập** =
+70 lần chạy cho mỗi phương pháp (`training/benchmark.py`, ~95 phút).
+
+```bash
+python -m training.benchmark --model results/gnn_model.pt \
+       --policy results/policy.pt --links 2 \
+       --pops 6 10 16 25 50 100 200 --seeds 10 --out benchmark.json
+python -m plotting.bench_figures --data results/benchmark.json
+```
+
+#### Kết quả sửa lại hai kết luận
+
+**Thứ nhất — "tăng tốc 10.03×" của mục 9.6 là ảo giác một-seed.**
+
+| `N_pop` | GA gốc | GA + GNN | |
+|---|---|---|---|
+| 6 | 4.6 s | 14.4 s | GNN **chậm hơn 3.1×** |
+| 10 | 9.6 s | 26.4 s | chậm hơn 2.8× |
+| 16 | 13.9 s | 28.4 s | chậm hơn 2.0× |
+| 25 | 18.3 s | 25.2 s | chậm hơn 1.4× |
+| 50 | 59.6 s | 32.0 s | nhanh hơn 1.9× |
+| 100 | 75.7 s | 35.2 s | 2.2× |
+| 200 | 152.6 s | 32.2 s | **4.7×** |
+
+GA + GNN surrogate **chậm hơn GA gốc ở mọi `N_pop` ≤ 25**. Nguyên nhân nằm ở
+`ga_surrogate.polish_screened`: nó chấm **toàn bộ mức** của mỗi gen qua surrogate, mà
+`datagen.graph.build_graph` dựng từng đồ thị một trong Python thuần. Với ~30 gen ×
+hàng trăm mức, chi phí đó gần như **không phụ thuộc `N_pop`** — nên khi quần thể nhỏ
+nó nuốt hết phần tiết kiệm được. Đây là hạn chế cài đặt, không phải hạn chế của ý
+tưởng: `training/batch_graph.py` đã có bản vector hoá nhưng `polish_screened` chưa dùng.
+
+Về chất lượng nghiệm, GA + GNN **không hơn GA gốc một cách có ý nghĩa**: trung vị
+fitness 34.6 so với 35.0, tỉ lệ thành công 8/70 so với 4/70. Chênh lệch nằm trong nhiễu.
+
+**Thứ hai — kết quả thật nằm ở gieo bằng policy, và nó là chuyện ĐỘ TIN CẬY.**
+
+| Phương pháp | Thành công | Trung vị fitness | Thời gian |
+|---|---|---|---|
+| GA gốc | **4 / 70** | 23.7 … 38.2 | 4.6 – 152.6 s |
+| GA + GNN surrogate | **8 / 70** | 23.6 … 41.7 | 14.4 – 35.2 s |
+| **GA + GNN + gieo bằng policy** | **69 / 70** | **49.70 ở mọi ngân sách** | 4.7 – 13.6 s |
+
+*Thành công* = đạt fitness trong vòng 1 % của giá trị tốt nhất quan sát được trên toàn
+bộ phép đo (≥ 49.207), ngưỡng dùng chung cho mọi phương pháp.
+
+Con số đáng chú ý nhất không phải tốc độ mà là **`N_pop = 10`**: gieo bằng policy đạt
+10/10 lần thành công với quần thể chỉ 10 cá thể, trong 4.7 giây. GA gốc với quần thể
+gấp **20 lần** (`N_pop = 200`, 152.6 giây) đạt 1/10. Nói cách khác, policy không chỉ
+làm GA nhanh hơn — nó **xoá bỏ nhu cầu về quần thể lớn**.
+
+Cách đọc đúng kết quả này: giá trị của mục 9 **không phải** "surrogate tăng tốc hàm
+đánh giá". Cái đó gần như không đem lại gì. Giá trị nằm ở chỗ policy biết **bắt đầu từ
+đâu** — mục 9.3 đã đo: lấy mẫu ngẫu nhiên cho 0/300 cấu hình khả thi, còn policy cho
+~31 % chỉ trong 8.4 ms. Vùng khả thi mỏng tới mức **tìm được đường vào nó chính là toàn
+bộ bài toán**, và đó là thứ GA tiêu gần hết ngân sách vào.
+
+#### Hình xuất ra
+
+| File | Nội dung |
+|---|---|
+| `figures/fig07_anytime_comparison.png` | fitness theo thời gian thực · theo số lần gọi mô hình giải tích |
+| `figures/fig08_budget_frontier.png` | biên fitness–chi phí (mỗi lần chạy là một điểm) · ngân sách đánh giá giải tích |
+| `figures/fig09_reliability.png` | tỉ lệ thành công theo `N_pop` · chất lượng quần thể ban đầu |
+
+Bảng LaTeX ở `results/benchmark_table.tex`; dữ liệu thô ở `results/benchmark.json`
+(10 seed) và `results/benchmark_s3.json` (3 seed, lần chạy thăm dò).
+
+Bảng màu dùng hệ **Okabe-Ito** — an toàn với mọi dạng mù màu và còn phân biệt được khi
+in đen trắng, điều kiện bắt buộc cho hình đưa vào paper (`plotting/style.BENCH`).
+
+#### Hạn chế của chính phép đo này
+
+**Vẫn chỉ một kịch bản.** Toàn bộ 70 lần chạy đều trên kịch bản Sec. V — đúng kịch bản
+chiếm 50 % kho huấn luyện của policy. Hạn chế đã ghi ở mục 9.9 vì thế **không được giải
+quyết** bởi phép đo này, chỉ được đo chính xác hơn. Phép đo thuyết phục còn thiếu là
+quét trên kịch bản chưa từng thấy.
+
+**`N_gen = 300`, `N_stag = 50` giữ cố định.** Chỉ `N_pop` được quét. Có thể GA gốc sẽ
+khá hơn nếu được nới `N_gen`, nhưng ở `N_pop = 200` nó đã dừng sớm vì hết kiên nhẫn
+(`N_stag`) chứ không phải vì hết thế hệ, nên nới `N_gen` khó thay đổi kết quả.
