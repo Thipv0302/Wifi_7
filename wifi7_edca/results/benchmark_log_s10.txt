@@ -1,0 +1,50 @@
+﻿thiet bi: cuda  ·  2 link  ·  N_pop [6, 10, 16, 25, 50, 100, 200]  ·  10 seed  ·  N_gen = 300, N_stag = 50
+
+=== [A] duong anytime (N_pop = 200, seed = 2025) ===
+    GA (analytical model only)           154.0 s  fitness  49.704  giai tich  31244
+    GA + GNN surrogate                    18.2 s  fitness  49.370  giai tich   1667
+    GA + GNN + policy seeding              6.7 s  fitness  49.695  giai tich    625
+    Policy only (no GA)                   8.3 ms  fitness  47.760  giai tich      1
+
+=== [B] quet ngan sach ===
+    GA (analytical model only)         N_pop    6      4.6 s  fitness  23.674 [14.047, 36.147]  giai tich     908
+    GA (analytical model only)         N_pop   10      9.6 s  fitness  29.731 [14.936, 41.612]  giai tich    1632
+    GA (analytical model only)         N_pop   16     13.9 s  fitness  30.344 [18.987, 49.370]  giai tich    2748
+    GA (analytical model only)         N_pop   25     18.3 s  fitness  30.419 [20.313, 47.834]  giai tich    3754
+    GA (analytical model only)         N_pop   50     59.6 s  fitness  38.217 [23.920, 47.762]  giai tich   11261
+    GA (analytical model only)         N_pop  100     75.7 s  fitness  33.002 [21.204, 49.704]  giai tich   14626
+    GA (analytical model only)         N_pop  200    152.6 s  fitness  35.042 [28.354, 49.704]  giai tich   29309
+    GA + GNN surrogate                 N_pop    6     14.4 s  fitness  23.577 [14.047, 36.147]  giai tich     810
+    GA + GNN surrogate                 N_pop   10     26.4 s  fitness  29.727 [14.936, 40.879]  giai tich    1578
+    GA + GNN surrogate                 N_pop   16     28.4 s  fitness  30.824 [18.987, 49.370]  giai tich    2004
+    GA + GNN surrogate                 N_pop   25     25.2 s  fitness  29.441 [21.929, 47.762]  giai tich    1806
+    GA + GNN surrogate                 N_pop   50     32.0 s  fitness  30.181 [23.810, 49.704]  giai tich    1994
+    GA + GNN surrogate                 N_pop  100     35.2 s  fitness  41.666 [15.111, 49.704]  giai tich    1976
+    GA + GNN surrogate                 N_pop  200     32.2 s  fitness  34.625 [20.671, 49.704]  giai tich    1483
+    GA + GNN + policy seeding          N_pop    6      5.9 s  fitness  49.704 [47.762, 49.704]  giai tich     326
+    GA + GNN + policy seeding          N_pop   10      4.7 s  fitness  49.704 [49.704, 49.704]  giai tich     590
+    GA + GNN + policy seeding          N_pop   16      6.0 s  fitness  49.704 [49.704, 49.704]  giai tich     676
+    GA + GNN + policy seeding          N_pop   25      8.3 s  fitness  49.704 [49.704, 49.704]  giai tich     668
+    GA + GNN + policy seeding          N_pop   50      8.0 s  fitness  49.704 [49.704, 49.704]  giai tich     600
+    GA + GNN + policy seeding          N_pop  100      9.1 s  fitness  49.700 [49.695, 49.704]  giai tich     594
+    GA + GNN + policy seeding          N_pop  200     13.6 s  fitness  49.695 [49.695, 49.704]  giai tich     608
+
+Da luu -> results\benchmark_s10.json
+
+\begin{table}[t]
+\centering
+\caption{Cost of reaching the optimised MLO EDCA configuration (Sec.~V scenario, $M=2$ links, $N_{pop}=200$, $N_{gen}=300$, $N_{stag}=50$, median of 10 independent seeds). All fitness values are computed by the analytical model of Eqs.~(1)--(18), never by the surrogate.}
+\label{tab:gnn_speedup}
+\begin{tabular}{lrrrr}
+\toprule
+Method & Time (s) & Exact evals & Fitness & Speed-up \\
+\midrule
+GA (analytical model only) & 152.6 & 29309 & 35.042 & --- \\
+GA + GNN surrogate & 32.2 & 1483 & 34.625 & $4.7\times$ \\
+GA + GNN + policy seeding & 13.6 & 607 & 49.695 & $11.3\times$ \\
+Policy only (no GA) & 0.0083 & 1 & 47.760 & $18276\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Da luu bang -> results\benchmark_s10_table.tex

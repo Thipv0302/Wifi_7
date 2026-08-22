@@ -1,0 +1,73 @@
+﻿surrogate chay tren: cuda
+
+=== [1/2] GA goc (chi mo hinh giai tich) ===
+    gen   0/300  best =   -0.615  mean =   -4.645  (danh gia: 381)
+    gen  10/300  best =   14.141  mean =    0.934  (danh gia: 2158)
+    gen  20/300  best =   16.318  mean =    4.851  (danh gia: 3886)
+    gen  30/300  best =   19.308  mean =    3.239  (danh gia: 5641)
+    gen  40/300  best =   23.334  mean =    2.060  (danh gia: 7385)
+    gen  50/300  best =   25.335  mean =   10.114  (danh gia: 9167)
+    gen  60/300  best =   29.466  mean =    9.409  (danh gia: 10895)
+    gen  70/300  best =   33.892  mean =   10.108  (danh gia: 12646)
+    gen  80/300  best =   38.134  mean =   16.373  (danh gia: 14329)
+    gen  90/300  best =   41.268  mean =   19.841  (danh gia: 16074)
+    gen 100/300  best =   41.883  mean =   21.931  (danh gia: 17841)
+    gen 110/300  best =   44.960  mean =   20.569  (danh gia: 19617)
+    gen 120/300  best =   48.948  mean =   24.113  (danh gia: 21386)
+    gen 130/300  best =   49.704  mean =   23.362  (danh gia: 23160)
+    gen 140/300  best =   49.704  mean =   24.638  (danh gia: 24904)
+    gen 150/300  best =   49.704  mean =   26.513  (danh gia: 26637)
+    gen 160/300  best =   49.704  mean =   27.981  (danh gia: 28370)
+    gen 170/300  best =   49.704  mean =   24.723  (danh gia: 30088)
+
+
+=== [2/2] GA + GNN surrogate ===
+    gen   0/300  best =   -0.615  (giai tich: 16, GNN: 391)
+    gen  10/300  best =   12.591  (giai tich: 96, GNN: 2278)
+    gen  20/300  best =   14.481  (giai tich: 176, GNN: 4157)
+    gen  30/300  best =   16.884  (giai tich: 256, GNN: 6046)
+    gen  40/300  best =   22.317  (giai tich: 335, GNN: 7905)
+    gen  50/300  best =   28.309  (giai tich: 415, GNN: 9785)
+    gen  60/300  best =   31.345  (giai tich: 495, GNN: 11668)
+    gen  70/300  best =   35.502  (giai tich: 575, GNN: 13556)
+    gen  80/300  best =   38.017  (giai tich: 655, GNN: 15425)
+    gen  90/300  best =   39.683  (giai tich: 735, GNN: 17308)
+    gen 100/300  best =   41.449  (giai tich: 814, GNN: 19178)
+    gen 110/300  best =   44.672  (giai tich: 894, GNN: 21051)
+    gen 120/300  best =   47.193  (giai tich: 976, GNN: 22926)
+    gen 130/300  best =   48.145  (giai tich: 1058, GNN: 24802)
+    gen 140/300  best =   49.370  (giai tich: 1141, GNN: 26751)
+    gen 150/300  best =   49.370  (giai tich: 1228, GNN: 28678)
+    gen 160/300  best =   49.370  (giai tich: 1317, GNN: 30656)
+    gen 170/300  best =   49.370  (giai tich: 1407, GNN: 32630)
+    gen 180/300  best =   49.370  (giai tich: 1497, GNN: 34608)
+    gen 190/300  best =   49.370  (giai tich: 1587, GNN: 36588)
+
+
+==============================================================
+                                 GA goc         GA + GNN
+--------------------------------------------------------------
+thoi gian (s)                     157.0             15.7
+danh gia giai tich                31244             1667
+danh gia bang GNN                     0            36588
+fitness (da kiem chung)           49.704           49.370
+kha thi                            True             True
+the he dung                         177              191
+--------------------------------------------------------------
+tang toc: 10.03x  ·  giam danh gia giai tich: 18.74x
+==============================================================
+
+--- Nghiem cua GA + GNN (da kiem chung bang mo hinh giai tich) ---
+   AC  link   CWmin   CWmax  AIFSN  TXOP(us)   R
+  AC1     0     181     181      2        32   7
+  AC2     1     256     256      2        32   7
+  AC3     0     362     362     14       544   7
+  AC4     0    1023    1023      3        64   7
+  AC5     1    1023    1023     11       352   7
+   AC  link        c      P_loss   Pr(D>=Dmax)       eps  dat?
+  AC1     0   0.0293   1.850e-11     5.196e-08   1.0e-07      OK
+  AC2     1   0.0275   1.180e-11     6.673e-07   1.0e-06      OK
+  AC3     0   0.0439   3.141e-10     9.547e-05   1.0e-04      OK
+  AC4     0   0.0389   1.359e-10     6.213e-08   1.0e-02      OK
+  AC5     1   0.0348   6.174e-11     1.037e-06   5.0e-01      OK
+muc tieu Eq.(18) = 49.370 | fitness = 49.370 | kha thi = True
