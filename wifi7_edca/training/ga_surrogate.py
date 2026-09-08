@@ -92,6 +92,7 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
 
     exact: Dict[bytes, Tuple[float, bool]] = {}     # genome -> (fitness, kha thi)
     hist = GAHistory()
+    t_start = time.perf_counter()
     n_sur = 0
 
     def eval_exact(g: np.ndarray) -> float:
@@ -127,6 +128,8 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
         return f
 
     def record(fit_: np.ndarray, best_f: float):
+        hist.wall.append(time.perf_counter() - t_start)
+        hist.evals.append(hist.n_eval)
         hist.best.append(best_f)
         hist.mean.append(float(np.mean(fit_)))
         hist.frac_feasible.append(float(np.mean(fit_ >= 0.0)))
@@ -195,9 +198,14 @@ def run_ga_surrogate(ac_set: Sequence[ACConfig], surrogate: Surrogate,
     if polish:
         best_g, best_f = polish_screened(best_g, spec, upper, ac_set, surrogate,
                                          eval_exact)
+        # The polish is a search step like any other, so it gets its own entry
+        # in every history list -- including the two timing ones, or the lists
+        # go out of step and an anytime read-out lands on the wrong generation.
         for lst, val in ((hist.best, best_f), (hist.mean, hist.mean[-1]),
                          (hist.frac_feasible, hist.frac_feasible[-1]),
-                         (hist.mean_feasible, hist.mean_feasible[-1])):
+                         (hist.mean_feasible, hist.mean_feasible[-1]),
+                         (hist.wall, time.perf_counter() - t_start),
+                         (hist.evals, hist.n_eval)):
             lst.append(val)
 
     best_params = decode(best_g, spec)

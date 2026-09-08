@@ -1,0 +1,432 @@
+method,method_label,point_index,wall_s,n_exact_eval,best_fitness
+ga,GA (analytical model only),0,1.357863,200,-0.786711
+ga,GA (analytical model only),1,2.479695,381,-0.615212
+ga,GA (analytical model only),2,3.485931,563,-0.326263
+ga,GA (analytical model only),3,4.376397,742,-0.045544
+ga,GA (analytical model only),4,5.233465,916,-0.045544
+ga,GA (analytical model only),5,6.058776,1093,10.211607
+ga,GA (analytical model only),6,6.804108,1262,11.939051
+ga,GA (analytical model only),7,7.635402,1442,14.100770
+ga,GA (analytical model only),8,8.462679,1625,14.100770
+ga,GA (analytical model only),9,9.268432,1802,14.100770
+ga,GA (analytical model only),10,10.064429,1976,14.100770
+ga,GA (analytical model only),11,10.892445,2158,14.141236
+ga,GA (analytical model only),12,11.724232,2333,14.141236
+ga,GA (analytical model only),13,12.552007,2505,14.549465
+ga,GA (analytical model only),14,13.411069,2681,14.871397
+ga,GA (analytical model only),15,14.288737,2861,14.969512
+ga,GA (analytical model only),16,15.096846,3030,15.390146
+ga,GA (analytical model only),17,15.944668,3205,15.390146
+ga,GA (analytical model only),18,16.764928,3377,15.390146
+ga,GA (analytical model only),19,17.632765,3555,15.390146
+ga,GA (analytical model only),20,18.467623,3723,15.390146
+ga,GA (analytical model only),21,19.289291,3886,16.318005
+ga,GA (analytical model only),22,20.110743,4052,16.318005
+ga,GA (analytical model only),23,20.999231,4223,16.318005
+ga,GA (analytical model only),24,21.911283,4403,16.850260
+ga,GA (analytical model only),25,22.795944,4580,16.850260
+ga,GA (analytical model only),26,23.661247,4756,17.516752
+ga,GA (analytical model only),27,24.548642,4931,17.516752
+ga,GA (analytical model only),28,25.430415,5105,17.516752
+ga,GA (analytical model only),29,26.344742,5286,19.308375
+ga,GA (analytical model only),30,27.250009,5463,19.308375
+ga,GA (analytical model only),31,28.149496,5641,19.308375
+ga,GA (analytical model only),32,29.035552,5818,19.308375
+ga,GA (analytical model only),33,29.914557,5996,19.308375
+ga,GA (analytical model only),34,30.750493,6169,19.647078
+ga,GA (analytical model only),35,31.594354,6340,19.647078
+ga,GA (analytical model only),36,32.422721,6512,20.342593
+ga,GA (analytical model only),37,33.294909,6689,23.334105
+ga,GA (analytical model only),38,34.142151,6861,23.334105
+ga,GA (analytical model only),39,35.051303,7039,23.334105
+ga,GA (analytical model only),40,35.922580,7214,23.334105
+ga,GA (analytical model only),41,36.752600,7385,23.334105
+ga,GA (analytical model only),42,37.616184,7562,23.334105
+ga,GA (analytical model only),43,38.535939,7744,23.334105
+ga,GA (analytical model only),44,39.441781,7923,24.473375
+ga,GA (analytical model only),45,40.338359,8100,24.473375
+ga,GA (analytical model only),46,41.250370,8281,24.620437
+ga,GA (analytical model only),47,42.170688,8461,24.620437
+ga,GA (analytical model only),48,43.092239,8638,24.767132
+ga,GA (analytical model only),49,43.999641,8815,24.782877
+ga,GA (analytical model only),50,44.934825,8994,25.334685
+ga,GA (analytical model only),51,45.855567,9167,25.334685
+ga,GA (analytical model only),52,46.763918,9341,26.104055
+ga,GA (analytical model only),53,47.660030,9507,26.906300
+ga,GA (analytical model only),54,48.585190,9680,26.906300
+ga,GA (analytical model only),55,49.467073,9844,27.961060
+ga,GA (analytical model only),56,50.392424,10017,27.961060
+ga,GA (analytical model only),57,51.317394,10189,27.961060
+ga,GA (analytical model only),58,52.251922,10365,27.961060
+ga,GA (analytical model only),59,53.164444,10540,29.465631
+ga,GA (analytical model only),60,54.065525,10710,29.465631
+ga,GA (analytical model only),61,55.052450,10895,29.465631
+ga,GA (analytical model only),62,56.035174,11075,29.486350
+ga,GA (analytical model only),63,56.998233,11251,29.486350
+ga,GA (analytical model only),64,57.941861,11426,32.874452
+ga,GA (analytical model only),65,58.935544,11603,32.874452
+ga,GA (analytical model only),66,59.932947,11778,33.819936
+ga,GA (analytical model only),67,60.928249,11954,33.819936
+ga,GA (analytical model only),68,61.891396,12119,33.864077
+ga,GA (analytical model only),69,62.937799,12300,33.864077
+ga,GA (analytical model only),70,63.914182,12473,33.864077
+ga,GA (analytical model only),71,64.888223,12646,33.892222
+ga,GA (analytical model only),72,65.849189,12815,34.649365
+ga,GA (analytical model only),73,66.844514,12992,34.649365
+ga,GA (analytical model only),74,67.806796,13164,34.649365
+ga,GA (analytical model only),75,68.733306,13333,34.754570
+ga,GA (analytical model only),76,69.622191,13497,36.210033
+ga,GA (analytical model only),77,70.539418,13665,37.046920
+ga,GA (analytical model only),78,71.404989,13825,37.097189
+ga,GA (analytical model only),79,72.289460,13991,37.134669
+ga,GA (analytical model only),80,73.214351,14162,37.598371
+ga,GA (analytical model only),81,74.114602,14329,38.133904
+ga,GA (analytical model only),82,75.006088,14493,38.174374
+ga,GA (analytical model only),83,75.946840,14671,38.174374
+ga,GA (analytical model only),84,76.875175,14848,38.174374
+ga,GA (analytical model only),85,77.817988,15025,38.174374
+ga,GA (analytical model only),86,78.751792,15200,38.534632
+ga,GA (analytical model only),87,79.686658,15373,38.622003
+ga,GA (analytical model only),88,80.662163,15553,38.622003
+ga,GA (analytical model only),89,81.568051,15721,38.811043
+ga,GA (analytical model only),90,82.491544,15896,38.811043
+ga,GA (analytical model only),91,83.428649,16074,41.267859
+ga,GA (analytical model only),92,84.332258,16249,41.267859
+ga,GA (analytical model only),93,85.244633,16422,41.267859
+ga,GA (analytical model only),94,86.180679,16602,41.401867
+ga,GA (analytical model only),95,87.081492,16773,41.427370
+ga,GA (analytical model only),96,88.020383,16952,41.747581
+ga,GA (analytical model only),97,88.928728,17128,41.747581
+ga,GA (analytical model only),98,89.834897,17306,41.747581
+ga,GA (analytical model only),99,90.765406,17488,41.749096
+ga,GA (analytical model only),100,91.698276,17670,41.872372
+ga,GA (analytical model only),101,92.588520,17841,41.882765
+ga,GA (analytical model only),102,93.502951,18014,41.936778
+ga,GA (analytical model only),103,94.433702,18191,42.040778
+ga,GA (analytical model only),104,95.392403,18375,42.040778
+ga,GA (analytical model only),105,96.321276,18555,44.222932
+ga,GA (analytical model only),106,97.241019,18734,44.303933
+ga,GA (analytical model only),107,98.186380,18913,44.392483
+ga,GA (analytical model only),108,99.068228,19084,44.684961
+ga,GA (analytical model only),109,99.958880,19252,44.803745
+ga,GA (analytical model only),110,100.918176,19437,44.960164
+ga,GA (analytical model only),111,101.867976,19617,44.960164
+ga,GA (analytical model only),112,102.836641,19798,44.960164
+ga,GA (analytical model only),113,103.779017,19975,47.221021
+ga,GA (analytical model only),114,104.729294,20152,47.221021
+ga,GA (analytical model only),115,105.697303,20334,47.443630
+ga,GA (analytical model only),116,106.616051,20512,47.470002
+ga,GA (analytical model only),117,107.484817,20682,47.707305
+ga,GA (analytical model only),118,108.345165,20854,47.761555
+ga,GA (analytical model only),119,109.203388,21034,47.761555
+ga,GA (analytical model only),120,110.038126,21210,47.761555
+ga,GA (analytical model only),121,110.877728,21386,48.948228
+ga,GA (analytical model only),122,111.749786,21567,49.681775
+ga,GA (analytical model only),123,112.550830,21739,49.681775
+ga,GA (analytical model only),124,113.391891,21921,49.681775
+ga,GA (analytical model only),125,114.149906,22100,49.681775
+ga,GA (analytical model only),126,114.884187,22277,49.681775
+ga,GA (analytical model only),127,115.655663,22457,49.704374
+ga,GA (analytical model only),128,116.378047,22631,49.704374
+ga,GA (analytical model only),129,117.130933,22811,49.704374
+ga,GA (analytical model only),130,117.854139,22986,49.704374
+ga,GA (analytical model only),131,118.598341,23160,49.704374
+ga,GA (analytical model only),132,119.354219,23334,49.704374
+ga,GA (analytical model only),133,120.114224,23507,49.704374
+ga,GA (analytical model only),134,120.880144,23684,49.704374
+ga,GA (analytical model only),135,121.639675,23858,49.704374
+ga,GA (analytical model only),136,122.388263,24030,49.704374
+ga,GA (analytical model only),137,123.174758,24205,49.704374
+ga,GA (analytical model only),138,123.940425,24377,49.704374
+ga,GA (analytical model only),139,124.721681,24550,49.704374
+ga,GA (analytical model only),140,125.500738,24728,49.704374
+ga,GA (analytical model only),141,126.293675,24904,49.704374
+ga,GA (analytical model only),142,127.077307,25080,49.704374
+ga,GA (analytical model only),143,127.840693,25251,49.704374
+ga,GA (analytical model only),144,128.567505,25413,49.704374
+ga,GA (analytical model only),145,129.342490,25585,49.704374
+ga,GA (analytical model only),146,130.110336,25759,49.704374
+ga,GA (analytical model only),147,130.879452,25931,49.704374
+ga,GA (analytical model only),148,131.632133,26104,49.704374
+ga,GA (analytical model only),149,132.406891,26282,49.704374
+ga,GA (analytical model only),150,133.181998,26457,49.704374
+ga,GA (analytical model only),151,133.971599,26637,49.704374
+ga,GA (analytical model only),152,134.736789,26817,49.704374
+ga,GA (analytical model only),153,135.483819,26989,49.704374
+ga,GA (analytical model only),154,136.274335,27166,49.704374
+ga,GA (analytical model only),155,137.046188,27335,49.704374
+ga,GA (analytical model only),156,137.809607,27506,49.704374
+ga,GA (analytical model only),157,138.580649,27683,49.704374
+ga,GA (analytical model only),158,139.303318,27852,49.704374
+ga,GA (analytical model only),159,140.009437,28021,49.704374
+ga,GA (analytical model only),160,140.713193,28193,49.704374
+ga,GA (analytical model only),161,141.466324,28370,49.704374
+ga,GA (analytical model only),162,142.220629,28546,49.704374
+ga,GA (analytical model only),163,142.946745,28716,49.704374
+ga,GA (analytical model only),164,143.711125,28891,49.704374
+ga,GA (analytical model only),165,144.481213,29066,49.704374
+ga,GA (analytical model only),166,145.211730,29232,49.704374
+ga,GA (analytical model only),167,145.948963,29399,49.704374
+ga,GA (analytical model only),168,146.733118,29580,49.704374
+ga,GA (analytical model only),169,147.437599,29745,49.704374
+ga,GA (analytical model only),170,148.186179,29919,49.704374
+ga,GA (analytical model only),171,148.918545,30088,49.704374
+ga,GA (analytical model only),172,149.670270,30260,49.704374
+ga,GA (analytical model only),173,150.445523,30439,49.704374
+ga,GA (analytical model only),174,151.184879,30607,49.704374
+ga,GA (analytical model only),175,151.953055,30780,49.704374
+ga,GA (analytical model only),176,152.690262,30949,49.704374
+ga,GA (analytical model only),177,153.447054,31119,49.704374
+ga,GA (analytical model only),178,153.989494,31244,49.704374
+ga_gnn,GA + GNN surrogate,0,0.250945,8,-0.786711
+ga_gnn,GA + GNN surrogate,1,0.377246,16,-0.615212
+ga_gnn,GA + GNN surrogate,2,0.501836,24,-0.326263
+ga_gnn,GA + GNN surrogate,3,0.584924,32,-0.045544
+ga_gnn,GA + GNN surrogate,4,0.664700,40,-0.045544
+ga_gnn,GA + GNN surrogate,5,0.744306,48,10.847284
+ga_gnn,GA + GNN surrogate,6,0.828472,56,11.185373
+ga_gnn,GA + GNN surrogate,7,0.907583,64,11.302235
+ga_gnn,GA + GNN surrogate,8,0.992800,72,12.237265
+ga_gnn,GA + GNN surrogate,9,1.081390,80,12.336404
+ga_gnn,GA + GNN surrogate,10,1.165171,88,12.336404
+ga_gnn,GA + GNN surrogate,11,1.252392,96,12.591108
+ga_gnn,GA + GNN surrogate,12,1.341033,104,13.907166
+ga_gnn,GA + GNN surrogate,13,1.422236,112,13.907166
+ga_gnn,GA + GNN surrogate,14,1.506937,120,13.907166
+ga_gnn,GA + GNN surrogate,15,1.589810,128,13.907166
+ga_gnn,GA + GNN surrogate,16,1.669927,136,14.481183
+ga_gnn,GA + GNN surrogate,17,1.757117,144,14.481183
+ga_gnn,GA + GNN surrogate,18,1.837320,152,14.481183
+ga_gnn,GA + GNN surrogate,19,1.920952,160,14.481183
+ga_gnn,GA + GNN surrogate,20,2.004880,168,14.481183
+ga_gnn,GA + GNN surrogate,21,2.096308,176,14.481183
+ga_gnn,GA + GNN surrogate,22,2.224235,184,14.945467
+ga_gnn,GA + GNN surrogate,23,2.321248,192,14.945467
+ga_gnn,GA + GNN surrogate,24,2.409529,200,15.069246
+ga_gnn,GA + GNN surrogate,25,2.519021,208,15.485989
+ga_gnn,GA + GNN surrogate,26,2.649092,216,15.816809
+ga_gnn,GA + GNN surrogate,27,2.734135,224,16.160184
+ga_gnn,GA + GNN surrogate,28,2.816739,232,16.245272
+ga_gnn,GA + GNN surrogate,29,2.901763,240,16.245272
+ga_gnn,GA + GNN surrogate,30,2.989546,248,16.884441
+ga_gnn,GA + GNN surrogate,31,3.079183,256,16.884441
+ga_gnn,GA + GNN surrogate,32,3.166916,264,19.548748
+ga_gnn,GA + GNN surrogate,33,3.255980,272,19.548748
+ga_gnn,GA + GNN surrogate,34,3.344883,280,20.028824
+ga_gnn,GA + GNN surrogate,35,3.435995,288,20.028824
+ga_gnn,GA + GNN surrogate,36,3.518088,296,20.164554
+ga_gnn,GA + GNN surrogate,37,3.606536,304,20.269528
+ga_gnn,GA + GNN surrogate,38,3.699438,312,22.065429
+ga_gnn,GA + GNN surrogate,39,3.776881,319,22.065429
+ga_gnn,GA + GNN surrogate,40,3.865344,327,22.065429
+ga_gnn,GA + GNN surrogate,41,3.990898,335,22.316984
+ga_gnn,GA + GNN surrogate,42,4.107902,343,24.183777
+ga_gnn,GA + GNN surrogate,43,4.196749,351,24.183777
+ga_gnn,GA + GNN surrogate,44,4.281309,359,24.183777
+ga_gnn,GA + GNN surrogate,45,4.369544,367,24.183777
+ga_gnn,GA + GNN surrogate,46,4.453464,375,25.945666
+ga_gnn,GA + GNN surrogate,47,4.570002,383,28.017233
+ga_gnn,GA + GNN surrogate,48,4.693192,391,28.017233
+ga_gnn,GA + GNN surrogate,49,4.772058,399,28.017233
+ga_gnn,GA + GNN surrogate,50,4.857610,407,28.017233
+ga_gnn,GA + GNN surrogate,51,4.981335,415,28.308765
+ga_gnn,GA + GNN surrogate,52,5.106960,423,30.051570
+ga_gnn,GA + GNN surrogate,53,5.188359,431,30.616433
+ga_gnn,GA + GNN surrogate,54,5.269735,439,30.651034
+ga_gnn,GA + GNN surrogate,55,5.354936,447,31.160327
+ga_gnn,GA + GNN surrogate,56,5.438743,455,31.160327
+ga_gnn,GA + GNN surrogate,57,5.523058,463,31.160327
+ga_gnn,GA + GNN surrogate,58,5.609132,471,31.160327
+ga_gnn,GA + GNN surrogate,59,5.693385,479,31.160327
+ga_gnn,GA + GNN surrogate,60,5.777150,487,31.344838
+ga_gnn,GA + GNN surrogate,61,5.862783,495,31.344838
+ga_gnn,GA + GNN surrogate,62,5.982911,503,31.705671
+ga_gnn,GA + GNN surrogate,63,6.099238,511,31.817051
+ga_gnn,GA + GNN surrogate,64,6.184287,519,31.826089
+ga_gnn,GA + GNN surrogate,65,6.267001,527,32.152008
+ga_gnn,GA + GNN surrogate,66,6.348162,535,33.934797
+ga_gnn,GA + GNN surrogate,67,6.427723,543,33.934797
+ga_gnn,GA + GNN surrogate,68,6.503043,551,33.934797
+ga_gnn,GA + GNN surrogate,69,6.583464,559,33.934797
+ga_gnn,GA + GNN surrogate,70,6.663235,567,35.234087
+ga_gnn,GA + GNN surrogate,71,6.741681,575,35.502282
+ga_gnn,GA + GNN surrogate,72,6.818108,583,35.745960
+ga_gnn,GA + GNN surrogate,73,6.898703,591,36.422541
+ga_gnn,GA + GNN surrogate,74,6.979841,599,36.429286
+ga_gnn,GA + GNN surrogate,75,7.057773,607,36.806133
+ga_gnn,GA + GNN surrogate,76,7.134748,615,36.806133
+ga_gnn,GA + GNN surrogate,77,7.216441,623,36.806133
+ga_gnn,GA + GNN surrogate,78,7.295923,631,37.042796
+ga_gnn,GA + GNN surrogate,79,7.376585,639,37.114627
+ga_gnn,GA + GNN surrogate,80,7.455342,647,38.016685
+ga_gnn,GA + GNN surrogate,81,7.531545,655,38.016685
+ga_gnn,GA + GNN surrogate,82,7.612817,663,38.016685
+ga_gnn,GA + GNN surrogate,83,7.692983,671,38.018065
+ga_gnn,GA + GNN surrogate,84,7.769684,679,38.044377
+ga_gnn,GA + GNN surrogate,85,7.851222,687,38.044377
+ga_gnn,GA + GNN surrogate,86,7.929487,695,38.044377
+ga_gnn,GA + GNN surrogate,87,8.011599,703,38.806705
+ga_gnn,GA + GNN surrogate,88,8.090225,711,39.011975
+ga_gnn,GA + GNN surrogate,89,8.170152,719,39.011975
+ga_gnn,GA + GNN surrogate,90,8.251056,727,39.011975
+ga_gnn,GA + GNN surrogate,91,8.370124,735,39.683098
+ga_gnn,GA + GNN surrogate,92,8.491358,743,39.683098
+ga_gnn,GA + GNN surrogate,93,8.568483,751,40.008041
+ga_gnn,GA + GNN surrogate,94,8.648902,759,40.008041
+ga_gnn,GA + GNN surrogate,95,8.730897,767,40.861586
+ga_gnn,GA + GNN surrogate,96,8.813933,775,40.889994
+ga_gnn,GA + GNN surrogate,97,8.897201,783,40.901560
+ga_gnn,GA + GNN surrogate,98,8.978748,791,40.901560
+ga_gnn,GA + GNN surrogate,99,9.055775,798,41.083935
+ga_gnn,GA + GNN surrogate,100,9.132127,806,41.083935
+ga_gnn,GA + GNN surrogate,101,9.215005,814,41.448959
+ga_gnn,GA + GNN surrogate,102,9.297275,822,41.740512
+ga_gnn,GA + GNN surrogate,103,9.380121,830,41.942923
+ga_gnn,GA + GNN surrogate,104,9.462343,838,41.942923
+ga_gnn,GA + GNN surrogate,105,9.540107,846,42.674741
+ga_gnn,GA + GNN surrogate,106,9.620989,854,42.674741
+ga_gnn,GA + GNN surrogate,107,9.697417,862,42.837739
+ga_gnn,GA + GNN surrogate,108,9.778969,870,43.521028
+ga_gnn,GA + GNN surrogate,109,9.853815,878,43.521028
+ga_gnn,GA + GNN surrogate,110,9.935842,886,44.671746
+ga_gnn,GA + GNN surrogate,111,10.020649,894,44.671746
+ga_gnn,GA + GNN surrogate,112,10.101896,902,44.794034
+ga_gnn,GA + GNN surrogate,113,10.185955,910,45.538633
+ga_gnn,GA + GNN surrogate,114,10.264484,918,45.578877
+ga_gnn,GA + GNN surrogate,115,10.387361,927,45.578877
+ga_gnn,GA + GNN surrogate,116,10.502735,936,45.578877
+ga_gnn,GA + GNN surrogate,117,10.582480,944,47.038793
+ga_gnn,GA + GNN surrogate,118,10.665496,952,47.179488
+ga_gnn,GA + GNN surrogate,119,10.740374,960,47.179488
+ga_gnn,GA + GNN surrogate,120,10.819476,968,47.179488
+ga_gnn,GA + GNN surrogate,121,10.900091,976,47.192626
+ga_gnn,GA + GNN surrogate,122,10.984299,984,47.798719
+ga_gnn,GA + GNN surrogate,123,11.065973,992,47.798719
+ga_gnn,GA + GNN surrogate,124,11.147471,1000,48.062594
+ga_gnn,GA + GNN surrogate,125,11.229591,1008,48.062594
+ga_gnn,GA + GNN surrogate,126,11.304191,1016,48.145452
+ga_gnn,GA + GNN surrogate,127,11.385187,1024,48.145452
+ga_gnn,GA + GNN surrogate,128,11.466988,1032,48.145452
+ga_gnn,GA + GNN surrogate,129,11.550429,1040,48.145452
+ga_gnn,GA + GNN surrogate,130,11.634802,1049,48.145452
+ga_gnn,GA + GNN surrogate,131,11.720422,1058,48.145452
+ga_gnn,GA + GNN surrogate,132,11.803677,1066,48.848256
+ga_gnn,GA + GNN surrogate,133,11.899458,1074,48.848256
+ga_gnn,GA + GNN surrogate,134,12.021706,1082,48.848256
+ga_gnn,GA + GNN surrogate,135,12.113131,1091,48.848256
+ga_gnn,GA + GNN surrogate,136,12.197688,1100,48.848256
+ga_gnn,GA + GNN surrogate,137,12.288165,1109,48.848256
+ga_gnn,GA + GNN surrogate,138,12.416626,1117,49.135526
+ga_gnn,GA + GNN surrogate,139,12.505387,1125,49.135526
+ga_gnn,GA + GNN surrogate,140,12.587386,1133,49.135526
+ga_gnn,GA + GNN surrogate,141,12.667097,1141,49.369572
+ga_gnn,GA + GNN surrogate,142,12.749128,1149,49.369572
+ga_gnn,GA + GNN surrogate,143,12.823650,1157,49.369572
+ga_gnn,GA + GNN surrogate,144,12.901149,1165,49.369572
+ga_gnn,GA + GNN surrogate,145,12.983885,1174,49.369572
+ga_gnn,GA + GNN surrogate,146,13.072094,1183,49.369572
+ga_gnn,GA + GNN surrogate,147,13.159973,1192,49.369572
+ga_gnn,GA + GNN surrogate,148,13.249556,1201,49.369572
+ga_gnn,GA + GNN surrogate,149,13.375293,1210,49.369572
+ga_gnn,GA + GNN surrogate,150,13.502575,1219,49.369572
+ga_gnn,GA + GNN surrogate,151,13.588589,1228,49.369572
+ga_gnn,GA + GNN surrogate,152,13.675650,1237,49.369572
+ga_gnn,GA + GNN surrogate,153,13.762461,1246,49.369572
+ga_gnn,GA + GNN surrogate,154,13.853290,1255,49.369572
+ga_gnn,GA + GNN surrogate,155,13.978199,1264,49.369572
+ga_gnn,GA + GNN surrogate,156,14.100376,1273,49.369572
+ga_gnn,GA + GNN surrogate,157,14.182008,1282,49.369572
+ga_gnn,GA + GNN surrogate,158,14.265364,1290,49.369572
+ga_gnn,GA + GNN surrogate,159,14.351760,1299,49.369572
+ga_gnn,GA + GNN surrogate,160,14.438503,1308,49.369572
+ga_gnn,GA + GNN surrogate,161,14.526079,1317,49.369572
+ga_gnn,GA + GNN surrogate,162,14.611991,1326,49.369572
+ga_gnn,GA + GNN surrogate,163,14.698461,1335,49.369572
+ga_gnn,GA + GNN surrogate,164,14.783089,1344,49.369572
+ga_gnn,GA + GNN surrogate,165,14.869364,1353,49.369572
+ga_gnn,GA + GNN surrogate,166,14.957470,1362,49.369572
+ga_gnn,GA + GNN surrogate,167,15.043445,1371,49.369572
+ga_gnn,GA + GNN surrogate,168,15.128537,1380,49.369572
+ga_gnn,GA + GNN surrogate,169,15.213785,1389,49.369572
+ga_gnn,GA + GNN surrogate,170,15.298242,1398,49.369572
+ga_gnn,GA + GNN surrogate,171,15.384641,1407,49.369572
+ga_gnn,GA + GNN surrogate,172,15.471897,1416,49.369572
+ga_gnn,GA + GNN surrogate,173,15.560252,1425,49.369572
+ga_gnn,GA + GNN surrogate,174,15.643375,1434,49.369572
+ga_gnn,GA + GNN surrogate,175,15.773965,1443,49.369572
+ga_gnn,GA + GNN surrogate,176,15.902795,1452,49.369572
+ga_gnn,GA + GNN surrogate,177,15.986687,1461,49.369572
+ga_gnn,GA + GNN surrogate,178,16.072796,1470,49.369572
+ga_gnn,GA + GNN surrogate,179,16.161118,1479,49.369572
+ga_gnn,GA + GNN surrogate,180,16.248045,1488,49.369572
+ga_gnn,GA + GNN surrogate,181,16.383209,1497,49.369572
+ga_gnn,GA + GNN surrogate,182,16.500140,1506,49.369572
+ga_gnn,GA + GNN surrogate,183,16.583658,1515,49.369572
+ga_gnn,GA + GNN surrogate,184,16.671351,1524,49.369572
+ga_gnn,GA + GNN surrogate,185,16.759439,1533,49.369572
+ga_gnn,GA + GNN surrogate,186,16.844357,1542,49.369572
+ga_gnn,GA + GNN surrogate,187,16.930195,1551,49.369572
+ga_gnn,GA + GNN surrogate,188,17.019780,1560,49.369572
+ga_gnn,GA + GNN surrogate,189,17.107521,1569,49.369572
+ga_gnn,GA + GNN surrogate,190,17.197010,1578,49.369572
+ga_gnn,GA + GNN surrogate,191,17.290733,1587,49.369572
+ga_gnn,GA + GNN surrogate,192,18.225440,1667,49.369572
+ga_gnn_policy,GA + GNN + policy seeding,0,0.123295,2,48.934241
+ga_gnn_policy,GA + GNN + policy seeding,1,0.185584,9,48.934241
+ga_gnn_policy,GA + GNN + policy seeding,2,0.249788,17,48.934241
+ga_gnn_policy,GA + GNN + policy seeding,3,0.317013,25,49.667788
+ga_gnn_policy,GA + GNN + policy seeding,4,0.387814,33,49.667788
+ga_gnn_policy,GA + GNN + policy seeding,5,0.459228,41,49.667788
+ga_gnn_policy,GA + GNN + policy seeding,6,0.524185,48,49.667788
+ga_gnn_policy,GA + GNN + policy seeding,7,0.593083,56,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,8,0.660145,64,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,9,0.738024,73,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,10,0.815410,82,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,11,0.896027,90,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,12,0.965535,96,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,13,1.045634,105,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,14,1.166330,114,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,15,1.263124,121,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,16,1.344300,130,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,17,1.424459,139,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,18,1.504095,148,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,19,1.585321,157,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,20,1.670499,166,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,21,1.750975,174,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,22,1.829496,182,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,23,1.914446,191,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,24,2.001362,200,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,25,2.083621,208,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,26,2.167534,217,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,27,2.250472,226,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,28,2.372134,235,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,29,2.481403,244,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,30,2.566073,253,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,31,2.653124,262,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,32,2.737691,271,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,33,2.818746,280,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,34,2.935735,288,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,35,3.050498,296,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,36,3.129633,305,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,37,3.212902,314,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,38,3.295687,323,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,39,3.383555,332,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,40,3.472099,341,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,41,3.555252,350,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,42,3.640219,359,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,43,3.765569,368,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,44,3.879270,377,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,45,3.968494,386,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,46,4.067639,395,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,47,4.186817,403,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,48,4.282105,412,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,49,4.366151,421,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,50,4.451066,430,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,51,4.536812,439,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,52,4.621077,448,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,53,4.705764,457,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,54,4.794626,466,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,55,4.882110,475,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,56,4.969214,484,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,57,5.070035,493,49.681775
+ga_gnn_policy,GA + GNN + policy seeding,58,6.704116,625,49.695191

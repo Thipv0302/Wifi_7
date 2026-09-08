@@ -9,3 +9,13 @@ __pycache__/
 *_smoke.*
 
 *.zip
+
+# Checkpoint cua cac lan chay do do lech huan luyen (train_variance.json da
+# tom tat ket qua). Sinh lai bang: python -m training.train_variance
+wifi7_edca/results/var_*.pt
+# ...tru checkpoint policy dang duoc trien khai: pp1_paper_figs, pp1_anytime,
+# pp1_qos_methods va probe cua train_gnn deu nap file nay.
+!wifi7_edca/results/var_1500_2027.pt
+wifi7_edca/results/policy_6k*.pt
+wifi7_edca/results/policy_12k*.pt
+wifi7_edca/results/gnn_model_curve.pt

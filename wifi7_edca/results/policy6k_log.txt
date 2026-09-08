@@ -1,0 +1,47 @@
+thiet bi: cuda · surrogate: results/gnn_model.pt
+kho kich ban: 2000 (50 % la kich ban Sec. V)
+so tham so policy: 277,363
+buoc     0/6000  elite(surrogate)    8.08  | kich ban Sec.V: fitness CHINH XAC  -4.683  kha thi False  (0s)
+buoc   400/6000  elite(surrogate)   41.37  | kich ban Sec.V: fitness CHINH XAC  -0.438  kha thi False  (24s)
+buoc   800/6000  elite(surrogate)   37.96  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (47s)
+buoc  1200/6000  elite(surrogate)   39.63  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (69s)
+buoc  1600/6000  elite(surrogate)   35.89  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (91s)
+buoc  2000/6000  elite(surrogate)   34.66  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (113s)
+buoc  2400/6000  elite(surrogate)   34.95  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (135s)
+buoc  2800/6000  elite(surrogate)   29.07  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (157s)
+buoc  3200/6000  elite(surrogate)   31.69  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (179s)
+buoc  3600/6000  elite(surrogate)   29.16  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (201s)
+buoc  4000/6000  elite(surrogate)   27.36  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (224s)
+buoc  4400/6000  elite(surrogate)   24.93  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (246s)
+buoc  4800/6000  elite(surrogate)   24.76  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (268s)
+buoc  5200/6000  elite(surrogate)   22.99  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (290s)
+buoc  5600/6000  elite(surrogate)   21.34  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (313s)
+buoc  5999/6000  elite(surrogate)   20.09  | kich ban Sec.V: fitness CHINH XAC  -0.604  kha thi False  (336s)
+
+Da luu policy -> results/policy_6k_rerun.pt
+
+==========================================================================
+KET QUA -- kich ban Sec. V, moi fitness deu do MO HINH GIAI TICH tinh
+==========================================================================
+phuong phap                                     thoi gian   fitness  kha thi
+--------------------------------------------------------------------------
+Policy (greedy, 1 mau)                            38.3 ms    -0.604    False
+Policy (256 mau, surrogate xep hang)              34.3 ms    -0.604    False
+GA + GNN surrogate (muc 9.6)                      15.7 s     49.370     True
+GA goc (muc 9.6)                                 157.0 s     49.704     True
+--------------------------------------------------------------------------
+
+--- Nghiem tot nhat cua policy (Policy (greedy, 1 mau)) ---
+   AC  link   CWmin   CWmax  AIFSN  TXOP(us)   R
+  AC1     0     181     181      2       736   7
+  AC2     1     256     256      5       736   7
+  AC3     1     512     512      2      1408   7
+  AC4     0    1023    1023     15        32   7
+  AC5     0    1023    1023     15        32   7
+   AC  link        c      P_loss   Pr(D>=Dmax)       eps  dat?
+  AC1     0   0.0188   8.166e-13     1.589e-09   1.0e-07      OK
+  AC2     1   0.0385   1.264e-10     1.617e-05   1.0e-06 VI PHAM
+  AC3     1   0.0385   1.257e-10     3.485e-05   1.0e-04      OK
+  AC4     0   0.0316   3.167e-11     5.631e-07   1.0e-02      OK
+  AC5     0   0.0316   3.167e-11     4.311e-07   5.0e-01      OK
+muc tieu Eq.(18) = 49.799 | fitness = -0.604 | kha thi = False

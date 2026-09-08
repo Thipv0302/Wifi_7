@@ -190,6 +190,13 @@ def train(args):
     tables = LevelTables(dev)
     print(f"thiet bi: {dev} · surrogate: {args.surrogate}")
 
+    # `--seed` phai chi phoi CA torch, khong chi numpy. Truoc day chi numpy
+    # duoc seed, nen khoi tao trong so va phep lay mau (sample_levels) van
+    # ngau nhien: hai lan chay cung cau hinh cho 48.081 (kha thi) va -0.604
+    # (VI PHAM). Khong the do phuong sai, cung khong the tai lap ket qua.
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
+
     rng = np.random.default_rng(args.seed)
     pool = [main_scenario() if rng.random() < 0.5 else sample_scenario(rng)
             for _ in range(args.pool)]

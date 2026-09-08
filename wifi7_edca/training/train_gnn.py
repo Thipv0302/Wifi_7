@@ -120,7 +120,107 @@ def evaluate(model: nn.Module, va: Dict[str, torch.Tensor],
     return out_m
 
 
+# V = 8 la so ca the tot nhat ma pipeline that su chuyen sang mo hinh giai tich
+# moi the he, nen do "trung binh F cua top-V" chinh la do dung dai luong quyet
+# dinh chat luong pipeline.
+#
+# n_policy phai NHO: kho co 200 mau policy tren 1720 ung vien thi 12% kho la
+# gan toi uu, va mot mang CHUA huan luyen cung cham trung mot trong so do --
+# duong cong bat dau ngay o 47.76 va sau do chi nhay qua lai. Giu ty le tot
+# quanh 2-3% de phep do con phan biet duoc.
+PROBE = dict(n_random=1400, n_policy=40, top_v=8, seed=2025)
+_POOL = {}
+
+
+def _build_pool(device: str) -> Dict:
+    """Kho ung vien co dinh cho kich ban chinh, da cham diem CHINH XAC mot lan.
+
+    Duong hoi tu cua mang danh gia phai do dung viec no lam: XEP HANG. Mot ban
+    truoc do bang cach chay GA-co-surrogate va lay ket qua, nhung o ngan sach
+    du nho de chay moi epoch thi con so ay bi nghen boi kha nang tim kiem cua
+    GA, khong phai boi chat luong mang -- duong cong nam bet o 14..19 va khong
+    di len du RMSE giam deu.
+
+    Do o day la: cho mang chon ca the tot nhat theo no trong kho, roi bao cao
+    muc tieu THAT cua ca the do. Mang cang xep hang dung thi lua chon cang tot,
+    va tran cua duong cong la gia tri tot nhat co trong kho -- mot muc tham
+    chieu ve duoc len hinh. Kho tron ung vien ngau nhien (dau thap) voi mau tu
+    policy (dau cao) de co du dai gia tri; kho duoc cham diem mot lan nen moi
+    lan do sau do khong ton them lan goi mo hinh giai tich nao.
+    """
+    if _POOL:
+        return _POOL
+    from common.utility import evaluate_config, fitness
+    from datagen.graph import build_graph
+    from datagen.scenario import main_scenario
+    from datagen.genome import GenomeSpec, decode, encode, random_genome
+    from training.ga import structured_seeds
+    from training.gnn import Surrogate
+    from training.train_policy import load_policy
+
+    acs = main_scenario()
+    spec = GenomeSpec(n_ac=len(acs), n_links=2, allow_link_choice=True)
+    rng = np.random.default_rng(PROBE["seed"])
+
+    genomes = [random_genome(spec, rng) for _ in range(PROBE["n_random"])]
+    genomes += [encode(p, spec) for p in structured_seeds(acs, 2)]
+
+    pol_path = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "results", "var_1500_2027.pt")
+    if os.path.exists(pol_path):
+        from training.compare_seeding import policy_seeds
+        ref = Surrogate.load(os.path.join(os.path.dirname(pol_path),
+                                          "gnn_model.pt"), device)
+        pol = load_policy(pol_path, device)
+        genomes += policy_seeds(pol, ref, acs, 2,
+                                n_seed=PROBE["n_policy"], temperature=1.6)
+
+    params = [decode(g, spec) for g in genomes]
+    exact = np.array([fitness(evaluate_config(p, acs), acs) for p in params])
+    v = PROBE["top_v"]
+    _POOL.update(graphs=[build_graph(p, acs) for p in params],
+                 exact=exact, n=len(genomes),
+                 best=float(exact.max()),
+                 median=float(np.median(exact)),
+                 # Tran cua duong cong: trung binh top-V neu xep hang HOAN HAO.
+                 oracle_topv=float(np.sort(exact)[-v:].mean()),
+                 frac_feasible=float((exact > 0).mean()))
+    print("    [curve] kho probe: %d ung vien, %.1f%% kha thi, "
+          "F tot nhat %.3f, tran top-%d %.3f"
+          % (_POOL["n"], 100 * _POOL["frac_feasible"], _POOL["best"], v,
+             _POOL["oracle_topv"]), flush=True)
+    return _POOL
+
+
+@torch.no_grad()
+def _probe_fitness(model: nn.Module, device: str):
+    """Chat luong cua V ung vien ma mo hinh chuyen tiep cho mo hinh giai tich.
+
+    Do dung dai luong pipeline phu thuoc vao: moi the he, g_phi xep hang ca
+    quan the va chi V = 8 ca the tot nhat theo no duoc danh gia chinh xac. Vi
+    vay phep do la TRUNG BINH muc tieu that cua top-V do mang chon -- xep hang
+    cang dung thi trung binh cang gan tran `oracle_topv`.
+
+    Trung binh top-V thay vi top-1 vi top-1 la mot mau duy nhat: no nhay giua
+    "trung cum tot" va "truot" nen duong cong chi ra tieng on, khong ra xu the.
+
+    Cung don vi ($F$, do bang mo hinh giai tich) voi duong hoi tu cua mang de
+    xuat, nen hai duong dat canh nhau tren mot truc y duoc.
+    """
+    from training.gnn import Surrogate
+
+    pool = _build_pool(device)
+    was_training = model.training
+    model.eval()
+    pred = Surrogate(model, device).fitness(pool["graphs"])
+    model.train(was_training)
+    top = np.argsort(pred)[-PROBE["top_v"]:]
+    sel = pool["exact"][top]
+    return float(sel.mean()), float(sel.max())
+
+
 def train(args) -> None:
+    curve = [] if getattr(args, "curve_out", None) else None
     device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     print(f"thiet bi: {device}")
     if device == "cuda":
@@ -181,6 +281,20 @@ def train(args) -> None:
 
         if ep % max(args.epochs // 20, 1) == 0 or ep == args.epochs - 1:
             mt = evaluate(model, va)
+            if curve is not None:
+                # Duong hoi tu tren THANG FITNESS, cung don vi voi duong cua
+                # mang de xuat, nen hai duong ve chung mot truc y duoc. RMSE
+                # thi khong -- khac don vi.
+                f_mean, f_best = _probe_fitness(model, device)
+                curve.append({"epoch": ep, "elapsed": time.time() - t0,
+                              "exact": f_mean, "exact_best": f_best,
+                              "feasible": bool(f_mean > 0.0),
+                              "rmse_fit": mt["rmse_fit"],
+                              "rho_fit": mt["rho_fit"],
+                              "feas_acc": mt["feas_acc"]})
+                print(f"    [curve] ep {ep:3d}  top-{PROBE['top_v']} F: "
+                      f"trung binh {f_mean:8.3f}  tot nhat {f_best:8.3f}",
+                      flush=True)
             print(f"ep {ep:3d}/{args.epochs}  loss {tot/max(nb,1):.4f}  "
                   f"RMSE logc {mt['rmse_logc']:.4f}  theta {mt['rmse_theta']:.3f}  "
                   f"feas.acc {mt['feas_acc']*100:.2f}%  rho {mt['rho_fit']:.4f}  "
@@ -210,6 +324,14 @@ def train(args) -> None:
                args.out)
     print(f"\nDa luu mo hinh -> {args.out}")
 
+    if curve is not None:
+        import json
+        with open(args.curve_out, "w") as fh:
+            json.dump({"probe": PROBE, "epochs": args.epochs,
+                       "pool": {k: _POOL.get(k) for k in ("n", "best", "median", "oracle_topv", "frac_feasible")},
+                       "metrics": mt, "curve": curve}, fh, indent=1)
+        print(f"Da luu duong hoi tu -> {args.curve_out}")
+
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Huan luyen GNN surrogate cho EDCA")
@@ -228,4 +350,6 @@ if __name__ == "__main__":
     ap.add_argument("--no-share", action="store_true",
                     help="khong chia se trong so giua cac lop message passing")
     ap.add_argument("--no-amp", action="store_true")
+    ap.add_argument("--curve-out", type=str, default=None,
+                    help="ghi duong hoi tu theo fitness ra file JSON")
     train(ap.parse_args())

@@ -26,6 +26,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
 
+import time
+
 import numpy as np
 
 from common.utility import QoSResult, evaluate_config, fitness
@@ -41,6 +43,12 @@ class GAHistory:
     mean: List[float] = field(default_factory=list)          # trung binh toan quan the
     mean_feasible: List[float] = field(default_factory=list)  # trung binh ca the kha thi
     frac_feasible: List[float] = field(default_factory=list)
+    # Moc thoi gian va so lan goi mo hinh giai tich TAI moi the he. Khong co
+    # hai cai nay thi khong tra loi duoc "sau t giay moi phuong phap dat toi
+    # dau", ma do la truc duy nhat so sanh cong bang duoc ba phuong phap:
+    # cung (Npop, Ngen) tieu ton cua chung 12.426, 1.070 va 474 lan goi.
+    wall: List[float] = field(default_factory=list)
+    evals: List[int] = field(default_factory=list)
     n_eval: int = 0
     stopped_at: int = 0
 
@@ -48,6 +56,7 @@ class GAHistory:
         return {"best": self.best, "mean": self.mean,
                 "mean_feasible": self.mean_feasible,
                 "frac_feasible": self.frac_feasible,
+                "wall": self.wall, "evals": self.evals,
                 "n_eval": self.n_eval, "stopped_at": self.stopped_at}
 
 
@@ -208,6 +217,7 @@ def run_ga(ac_set: Sequence[ACConfig], n_links: int = 1,
 
     cache: Dict[bytes, Tuple[float, bool]] = {}
     hist = GAHistory()
+    t_start = time.perf_counter()
 
     def evaluate(g: np.ndarray) -> float:
         key = g.tobytes()
@@ -224,6 +234,8 @@ def run_ga(ac_set: Sequence[ACConfig], n_links: int = 1,
 
     def record(pop_, fit_):
         ok = np.array([is_feasible(g) for g in pop_])
+        hist.wall.append(time.perf_counter() - t_start)
+        hist.evals.append(hist.n_eval)
         hist.best.append(best_f)
         hist.mean.append(float(np.mean(fit_)))
         hist.frac_feasible.append(float(ok.mean()))
@@ -288,6 +300,11 @@ def run_ga(ac_set: Sequence[ACConfig], n_links: int = 1,
 
     if polish:
         best_g, best_f = coordinate_polish(best_g, spec, upper, evaluate)
+        # The polish is a search step like any other, so it gets its own entry
+        # in every history list -- including the two timing ones, or the lists
+        # go out of step and an anytime read-out lands on the wrong generation.
+        hist.wall.append(time.perf_counter() - t_start)
+        hist.evals.append(hist.n_eval)
         hist.best.append(best_f)
         hist.mean.append(hist.mean[-1] if hist.mean else best_f)
         hist.frac_feasible.append(hist.frac_feasible[-1]

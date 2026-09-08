@@ -1,0 +1,5 @@
+method,method_label,wall_s_median,n_exact_eval_median,fitness_median,success,speedup_vs_ga
+ga,GA (analytical model only),152.5995,29309.0,35.041623,1/10,1.00
+ga_gnn,GA + GNN surrogate,32.2348,1483.0,34.625400,2/10,4.73
+ga_gnn_policy,GA + GNN + policy seeding,13.5642,607.5,49.695191,10/10,11.25
+policy,Policy only (no GA),0.008350,1,47.759610,,18275.8
