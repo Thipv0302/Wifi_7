@@ -1,85 +1,94 @@
-# Colab package — three result figures and the running-time table
+# Colab package — the manuscript's figures and table
 
 ```
 colab/
-├── wifi7_edca_figures.ipynb    the notebook, 8 code cells
+├── wifi7_edca_figures.ipynb    9 code cells
 └── data/                       everything it reads
-    ├── pp1_budget_methods.json
-    ├── pp1_qos_methods.json
-    ├── gnn_train_curve.json
-    ├── pp1_paper_figs.json
-    └── pipeline_ngen1.json
+    ├── pp1_paper_figs.json       Fig. 2(a)
+    ├── gnn_train_curve.json      Fig. 2(b)
+    ├── pp1_qos_methods.json      Fig. 3
+    ├── pp1_budget_methods.json   Fig. 4
+    ├── benchmark.json            Table I, upper block
+    ├── pipeline_ngen1.json       Table I, upper block
+    └── pp1_anytime.json          Table I, lower block
 ```
 
 ## How to run
 
 **Colab.** Upload `wifi7_edca_figures.ipynb`, run Cell 1, and when it asks,
-upload the five files from `data/` (Ctrl-click to select all at once). It also
-finds them by itself if you mount Drive and place them in `/content/data`.
+upload the seven files from `data/` (Ctrl-click to select all). It also finds
+them by itself if you mount Drive and place them in `/content/data`.
 
 **Locally.** Keep `data/` beside the notebook and run it; Cell 1 finds the
-folder without asking. Needs only `numpy`, `matplotlib` and — for the tables —
+folder without asking. Needs only `numpy`, `matplotlib` and — for the table —
 `pandas`. No project code is imported, so nothing else has to be installed.
 
-## What each cell does
+## Cells
 
 | cell | does |
 |---|---|
 | 1 | finds `data/`, or asks Colab to upload it |
 | 2 | plotting style, method colours and labels |
-| 3 | loads the five JSON files |
-| 4 | **Fig. 1** — threshold sweep: (a) fitness value, (b) sum of reliability indices |
-| 5 | **Fig. 2** — QoS: (a) delay violation probability, (b) packet loss probability |
-| 6 | **Fig. 3** — training convergence of both GNNs, one objective axis |
-| 7 | running-time tables |
-| 8 | the per-solve table again as LaTeX, ready to paste |
+| 3 | loads the seven JSON files |
+| 4 | **Fig. 2** — training convergence of both networks |
+| 5 | **Fig. 3** — QoS: delay violation and packet loss |
+| 6 | **Fig. 4** — threshold sweep: fitness and sum of reliability indices |
+| 7 | **Table I** — cost and quality, both blocks |
+| 8 | the upper block again as LaTeX, ready to paste |
+| 9 | extra: objective against compute (not in the paper) |
 
-Each figure cell writes a 600 dpi PNG next to the notebook and prints a check
-under the plot — monotonicity per method for Fig. 1, per-category feasibility
-for Fig. 2, the step and epoch at which each network converges for Fig. 3.
+Each figure cell writes a 600 dpi PNG beside the notebook and prints a check
+under the plot — where the network sits in the baseline's distribution for
+Fig. 2, per-category feasibility for Fig. 3, monotonicity and the strict
+ordering for Fig. 4.
 
 Nothing is re-simulated. Every number was produced by the analytical model in
-the main repository and written to these JSON files; the notebook reads and
-plots them.
+the main repository and written to these files; the notebook reads and plots.
 
-## Reading the figures
+## Three conventions worth knowing before reading the figures
 
-**Fig. 1 panel (a) is bounded; panel (b) is not.** The objective
-$F = \sum_i -\log_{10} P_{\mathrm{loss},i}$ does not contain $\varepsilon$,
-which enters only through the constraints, so relaxing $\varepsilon_1$ only
-enlarges the feasible set and the optimum cannot fall — a drop in (a) is a
-convergence failure of the solver, not a property of the problem. No such bound
-applies to $\sum_i \theta_i$ in (b), which is not the objective, so a dip there
-is a property of the solution. The cell prints the monotonicity check.
+**One run is compared with one run.** Fig. 2 draws the baseline as the *median*
+of its ten runs, with the range shaded and the runs marked individually, not as
+their best. A best-of-$N$ has $N$ chances where a single network run has one. On
+that footing the network's $47.76$ sits above seven of the ten baseline runs.
 
-**Fig. 2 plots each method's best of ten restarts.** On this scenario the spread
-between restarts (GA best $49.70$ against median $43.11$) is wider than the
-spread between methods, so a single run per method would mostly plot seed noise.
+**Budgets are stated because they differ.** The baseline's objective is not one
+number — it depends on what it is given, and across these figures it runs at
+3,362, 13,105 and 29,309 analytical-model calls. Fig. 4's legend carries each
+curve's cost, and there the quality ordering and the cost ordering run opposite
+ways: the pipeline is best *and* cheapest, at 478 calls against the baseline's
+3,362.
 
-**Fig. 3 scores each network by what its own output achieves.** $\pi_\psi$ emits
-a configuration, so it is scored by that configuration's exact $F$. $g_\phi$
-emits an ordering, so it is scored the way the pipeline uses it: the mean exact
-$F$ of the $V = 8$ candidates it forwards for exact evaluation, out of a fixed
-pool of 1,560 scored once in advance. A regression error would not go on this
-axis; the ranking it induces does.
+**The monotonicity bound is on the optimum, not on the mean.** $F$ does not
+contain $\varepsilon$, which enters only through the constraints, so relaxing
+$\varepsilon_1$ enlarges the feasible set and $F^\star$ cannot fall. That
+constrains the best-of-$N$, not the mean Fig. 4 plots, which is a property of the
+solver — it happens to be non-decreasing for all three here, at 40 restarts per
+point. At ten restarts the standard error is 1–3 objective points, enough to
+produce dips that are not there.
 
-## Running time
+## What the two blocks of Table I are for
 
-Two costs, paid at different times.
+They answer different questions, and the evaluation GNN looks different in each.
 
-*Per solve*, on the reference scenario at a common budget, median of ten seeds:
+*Upper — one search configuration.* $g_\phi$ is **not** expected to raise the
+objective here: it swaps an exact evaluator for an approximate one, so at an
+equal number of candidates examined it can at best match the baseline, and it
+carries prediction error besides. It returns $34.63$ against $35.04$ — for
+$19.8\times$ fewer exact calls. That is the correct expectation, not a
+disappointment.
 
-| configuration | time (s) | exact calls | $F$ best | $F$ median | speed-up |
-|---|---|---|---|---|---|
-| GA baseline | 69.60 | 13 105 | 49.70 | 43.11 | 1.0× |
-| `+` evaluation GNN $g_\phi$ | 9.12 | 1 112 | 45.31 | 30.92 | 7.6× |
-| `+` proposal GNN $\pi_\psi$ | 4.09 | 554 | 49.70 | 49.70 | 17.0× |
-| pipeline as deployed ($N_{pop}=160$, $N_{gen}=1$) | 2.62 | 142 | 49.70 | 49.70 | 26.5× |
+*Lower — one wall-clock budget.* This is where cheaper evaluation has to prove
+it buys something the optimiser can use. Over twenty seeds the ordering
+$\pi_\psi > g_\phi > \text{baseline}$ holds at every one of the 40 wall-clock
+and 48 exact-call budgets measured, without exception.
 
-Wall-clock depends on the machine (one RTX 4060, 26-core CPU); analytical-model
-calls do not, so the calls column is the one that transfers.
+The honest limit, which cell 9 shows: $g_\phi$ alone settles at $43.01$ because
+the surrogate's error caps what screening by it can select, while the baseline
+keeps climbing and would cross that ceiling given time beyond the range
+measured. Only $\pi_\psi$ lifts the ceiling.
 
-*One-off training*, paid once for all scenarios: 159 s to generate the training
-set, 401 s for $g_\phi$, 81 s for $\pi_\psi$ — 641 s in total. Reported
-separately rather than amortised into a per-solve figure, because how it
-amortises depends on how many scenarios a deployment solves.
+No early stopping is used in the lower block, so each run continues to the end
+of its budget — which is why the baseline's totals there (255 s, 52,056 calls)
+exceed the upper block's (152.6 s, 29,309 calls). The two are not
+interchangeable.
