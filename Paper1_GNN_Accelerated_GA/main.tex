@@ -55,8 +55,9 @@ initialisation is the dominant bottleneck, while evaluation cost remains
 substantial: on the reference five-category scenario, none of 600 sampled
 configurations satisfies all five constraints simultaneously. We therefore
 replace the expensive full genetic search with a pipeline of two graph neural
-networks followed by lightweight refinement. A proposal network maps a scenario directly to a population of
-candidate configurations, including the discrete link assignment, and is trained
+networks followed by lightweight refinement. A proposal network maps a scenario
+directly to a population of candidate configurations, including the discrete
+link assignment, and is trained
 by the cross-entropy method with no solved instance as a label; an evaluation
 network predicts the collision probability and delay-violation exponent, so
 candidates are ranked without invoking the analytical model. One generation of
@@ -105,7 +106,7 @@ matched compute budget it beats the baseline at every point we measured
 (Section~\ref{sec:cost}) --- but it does not by itself change how often a run
 succeeds.
 
-Section~\ref{sec:hard} reports what is. On the five-category scenario
+Section~\ref{sec:hard} identifies what does. On the five-category scenario
 of~\cite[Sec.~V]{Yi2025}, 300 configurations drawn uniformly from the parameter
 domain and 300 drawn from a hand-designed structured region contain no feasible
 point at all; even perturbations of the optimum are feasible only $1.5\%$ of the
@@ -642,11 +643,11 @@ does not correct the model.
 For multi-link EDCA configuration under delay constraints, search
 initialisation is the dominant bottleneck while evaluation cost remains
 substantial, which makes the proposal distribution the place to put model
-capacity. A pipeline
-built on that principle returns the best observed solution in $10/10$ runs in
-$2.6$~s using $142$ analytical-model calls, against $152.6$~s, $29{,}309$ calls
-and $1/10$ for the genetic baseline. Measured against compute rather than
-against search settings, the two networks separate cleanly: the evaluation
+capacity. A pipeline built on that principle returns the best observed
+solution in $10/10$ runs in $2.6$~s using $142$ analytical-model calls, against
+$152.6$~s, $29{,}309$ calls and $1/10$ for the genetic baseline. Measured
+against compute rather than against search settings, the two networks separate
+cleanly: the evaluation
 network is an efficiency gain, matching the baseline's objective for
 $19.8\times$ fewer exact calls and beating it at every budget in range while
 settling at a ceiling of its own; the proposal network is what lifts that
