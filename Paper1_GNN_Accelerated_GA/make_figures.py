@@ -454,8 +454,8 @@ def fig_methods_budget():
 # 3,362, because screening makes each candidate cheaper.  That is the point of
 # the surrogate, and the legend carries the three costs so the reader can check
 # it rather than take it on trust.
-SWEEP_BUDGET = {"ga": "60x60", "ga_gnn": "120x120",
-                "ga_gnn_policy": "120x120"}
+SWEEP_BUDGET = {"ga": "60x60r40", "ga_gnn": "120x120gr40",
+                "ga_gnn_policy": "120x120r40"}
 
 
 def fig_sweep_methods(budget=None):

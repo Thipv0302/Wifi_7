@@ -42,12 +42,15 @@ BUDGETS = [
     ("16x9r40",    "pp1_eps_baseline_iso_r40.json", None),
     ("40x40r40",   None,             "pp1_methods_40x40_r40.json"),
     ("120x120r40", None,             "pp1_methods_120x120_r40.json"),
+    # Ba muc cua hinh quet nguong trong ban thao, 40 khoi dau moi diem.
+    ("60x60r40",     "pp1_eps_baseline_60x60_r40.json", None),
+    ("120x120gr40",  None,            "pp1_methods_120x120_gnn_r40.json"),
 ]
 # GA thuan chay truoc khi script ghi lai n_eval, nen do rieng mot lan
 # (training/pp1_eps_baseline.py --n-restart 1 tren mot diem eps bat ky).
 GA_CALLS = {"16x9": 526, "24x24": 795, "40x40": 1622,
             "60x60": 3362, "80x80": 6060, "120x120": 12426,
-            "16x9r40": 526}
+            "16x9r40": 526, "60x60r40": 3362}
 
 
 def _sum_theta(genome, ac_set, spec) -> float:

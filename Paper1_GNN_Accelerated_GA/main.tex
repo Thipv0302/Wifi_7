@@ -491,12 +491,12 @@ quality; the margin comes from the seeding.
 reliability indices, against $\varepsilon_1$ over five decades. The baseline
 runs at the configuration that reproduces the objective reported for it
 in~\cite{Yi2025}; each network runs at the largest configuration we measured
-and, even so, spends fewer exact calls than the baseline --- $1{,}070$ and
-$474$ against $3{,}362$, as the legend records --- because screening makes each
-candidate cheaper. Each curve is the \emph{mean} over ten restarts, shaded by
+and, even so, spends fewer exact calls than the baseline --- $1{,}065$ and
+$478$ against $3{,}362$, as the legend records --- because screening makes each
+candidate cheaper. Each curve is the \emph{mean} over forty restarts, shaded by
 one standard deviation in (a). The band is itself a result: the pipeline's
-deviation never exceeds $0.09$, so its mean is its outcome, while the unseeded
-methods scatter by up to $9$ points. A mean is not bounded by the monotonicity
+deviation never exceeds $0.12$, so its mean is its outcome, while the unseeded
+methods scatter by up to $8.7$ points. A mean is not bounded by the monotonicity
 of $F^\star$, which constrains the optimum rather than the solver's output
 distribution.}
 \label{fig:sweep}
@@ -505,23 +505,24 @@ distribution.}
 \subsection{Robustness to the Threshold}
 
 Fig.~\ref{fig:sweep} repeats the comparison across five decades of
-$\varepsilon_1$, ten restarts per point. The baseline is run at the search
+$\varepsilon_1$, forty restarts per point. The baseline is run at the search
 configuration that reproduces the objective reported for it in~\cite{Yi2025},
-about $35$ at $\varepsilon_1 = 10^{-4}$; ours reaches $40.43$ there, the closest
+about $35$ at $\varepsilon_1 = 10^{-4}$; ours reaches $40.55$ there, the closest
 point on our grid and slightly in its favour. Each network is then given the
-largest configuration we measured, which still costs it $1{,}070$ and $474$
-exact calls against the baseline's $3{,}362$ --- $3.1\times$ and $7.1\times$
+largest configuration we measured, which still costs it $1{,}065$ and $478$
+exact calls against the baseline's $3{,}362$ --- $3.2\times$ and $7.0\times$
 fewer --- because a screened candidate is cheaper than an exactly evaluated one.
 The sweep also admits a monotonicity check: the objective~\eqref{eq:P1} does not
 contain $\varepsilon$, which enters only through~\eqref{eq:qos}, so relaxing
 $\varepsilon_1$ enlarges the feasible set without changing what is maximised
 over it and $F^\star$ cannot fall. That bound is on the optimum, not on the mean
-plotted here. The baseline averages $22.78$ at $\varepsilon_1 = 10^{-8}$ rising
-to $40.43$ at $10^{-4}$, the evaluation network $31.73$ to $49.75$ and the
-pipeline $47.76 \pm 0.00$ to $50.00 \pm 0.00$: the ordering
-$\pi_\psi > g_\phi > \text{baseline}$ holds at all five thresholds while the
-call counts run the other way, on five scenarios rather than one, which partly
-addresses the limitation in Section~\ref{sec:limits}.
+plotted here, which is non-decreasing for all three regardless. The baseline
+averages $25.43$ at $\varepsilon_1 = 10^{-8}$ rising to $40.55$ at $10^{-4}$,
+the evaluation network $31.89$ to $49.92$ and the pipeline $47.76 \pm 0.00$ to
+$50.00 \pm 0.00$: the ordering $\pi_\psi > g_\phi > \text{baseline}$ holds at
+all five thresholds while the call counts run the other way, on five scenarios
+rather than one, which partly addresses the limitation in
+Section~\ref{sec:limits}.
 
 \begin{table}[!t]
 \centering
